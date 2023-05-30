@@ -693,6 +693,14 @@ export namespace FirebaseDatabaseTypes {
 
     /**
      * Get the server-value for this query, or return a cached value if not connected.
+     *
+     * #### Example
+     *
+     * ```js
+     * const snapshot = await firebase.database().ref('users').get();
+     * snapshot.forEach((snapshot) => {
+     *  console.log('User:', snapshot.val());
+     * });
      */
     get(): Promise<DataSnapshot>;
 
