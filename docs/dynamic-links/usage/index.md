@@ -6,6 +6,9 @@ next: /in-app-messaging/usage
 previous: /database/presence-detection
 ---
 
+> [!WARNING]
+> Deprecated: Firebase Dynamic Links is deprecated and should not be adopted in projects that don't already use it. Functionality for the primary use cases of store/web routing and deferred/regular deep-linking will shut down on August 25, 2025. Firebase Authentication currently uses Firebase Dynamic Links to customize Authentication links, but the Firebase team will provide an update to ensure that this functionality continues working after the Firebase Dynamic Links service is shut down. See the [Dynamic Links Deprecation FAQ](https://firebase.google.com/support/dynamic-links-faq) for more information.
+
 # Installation
 
 This module requires that the `@react-native-firebase/app` module is already setup and installed. To install the "app" module, view the
@@ -49,6 +52,9 @@ a Dynamic Link on iOS or Android, they can be taken directly to the linked conte
 ![Firebase console dynamic link second step](https://images.prismic.io/invertase/7e5c7a61-899f-45e5-ab4e-ddf3cfee636a_Screenshot+2020-05-07+at+10.26.22.png?auto=compress,format)
 
 ## iOS Setup
+
+> Notes: Currently, iOS requires a workaround to make method swizzling work. The workaround is described in [this github comment](https://github.com/invertase/react-native-firebase/issues/4548#issuecomment-1252028059). Without this, dynamic link matching behavior may be inconsistent.
+> If you are using Expo Managed Workflow, be sure to load the [@react-native-firebase/dynamic-links config plugin](https://rnfirebase.io/#managed-workflow) to automatically apply the workaround.
 
 To setup Dynamic Links on iOS, it is a **prerequisite** that you have an Apple developer account [setup](https://developer.apple.com/programs/enroll/).
 
@@ -96,6 +102,8 @@ Example:
 ```
 
 If you don't add this, the dynamic link will invoke your app, but you cannot retrieve any deep link data you may need within your app, as the deep link will be completely ignored.
+
+Additionally specify the allowed URLs (by clicking the 3 dot menu icon > `Allowlist URL pattern` from the Dynamic Links page of the Firebase console) using regular expressions. Any URL that doesn't match one of the patterns will cause your Dynamic Links to return HTTP error 400.
 
 ## iOS Troubleshooting
 

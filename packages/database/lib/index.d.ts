@@ -17,6 +17,8 @@
 
 import { ReactNativeFirebase } from '@react-native-firebase/app';
 
+export type FirebaseApp = ReactNativeFirebase.FirebaseApp;
+
 /**
  * Firebase Database package for React Native.
  *
@@ -380,7 +382,7 @@ export namespace FirebaseDatabaseTypes {
      */
     transaction(
       // eslint-disable-next-line @typescript-eslint/ban-types
-      transactionUpdate: (currentData: object) => object | undefined,
+      transactionUpdate: (currentData: any) => any | undefined,
       onComplete?: (error: Error | null, committed: boolean, finalResult: DataSnapshot) => void,
       applyLocally?: boolean,
     ): Promise<TransactionResult>;
@@ -1305,6 +1307,8 @@ export const firebase: ReactNativeFirebase.Module & {
     name?: string,
   ): ReactNativeFirebase.FirebaseApp & { database(): FirebaseDatabaseTypes.Module };
 };
+
+export * from './modular';
 
 export default defaultExport;
 

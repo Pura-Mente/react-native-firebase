@@ -1,6 +1,16 @@
 import * as ReactNative from 'react-native';
+import { jest } from '@jest/globals';
 
 jest.doMock('react-native', () => {
+  // @ts-ignore - react-native empty bridge config so native modules at least default init
+  global.__fbBatchedBridgeConfig = {};
+
+  // @ts-ignore - react-native new architecture interop flag to true
+  global.RN$TurboInterop = true;
+
+  // make sure PlatformConstants is visible otherwise turbo modules default init fails
+  ReactNative.NativeModules['PlatformConstants'] = {};
+
   return Object.setPrototypeOf(
     {
       Platform: {
@@ -43,7 +53,9 @@ jest.doMock('react-native', () => {
           },
           addAuthStateListener: jest.fn(),
           addIdTokenListener: jest.fn(),
+          setTenantId: jest.fn(),
           useEmulator: jest.fn(),
+          configureAuthDomain: jest.fn(),
         },
         RNFBCrashlyticsModule: {},
         RNFBDatabaseModule: {
@@ -58,6 +70,9 @@ jest.doMock('react-native', () => {
           onMessage: jest.fn(),
         },
         RNFBPerfModule: {},
+        RNFBConfigModule: {
+          onConfigUpdated: jest.fn(),
+        },
         RNFBStorageModule: {
           useEmulator: jest.fn(),
         },

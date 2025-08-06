@@ -24,12 +24,14 @@ import { isIOS } from '@react-native-firebase/app/lib/common';
 import builder from './builder';
 import version from './version';
 
+export const ShortLinkType = {
+  SHORT: 'SHORT',
+  UNGUESSABLE: 'UNGUESSABLE',
+  DEFAULT: 'DEFAULT',
+};
+
 const statics = {
-  ShortLinkType: {
-    SHORT: 'SHORT',
-    UNGUESSABLE: 'UNGUESSABLE',
-    DEFAULT: 'DEFAULT',
-  },
+  ShortLinkType,
 };
 
 const namespace = 'dynamicLinks';
@@ -102,6 +104,8 @@ class FirebaseLinksModule extends FirebaseModule {
     return this.native.resolveLink(link);
   }
 }
+
+export * from './modular';
 
 // import { SDK_VERSION } from '@react-native-firebase/dynamic-links';
 export const SDK_VERSION = version;

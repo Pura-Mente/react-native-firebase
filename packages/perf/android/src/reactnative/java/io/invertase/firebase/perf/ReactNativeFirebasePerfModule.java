@@ -17,6 +17,7 @@ package io.invertase.firebase.perf;
  *
  */
 
+import android.app.Activity;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -75,6 +76,42 @@ public class ReactNativeFirebasePerfModule extends ReactNativeFirebaseModule {
             id,
             Arguments.toBundle(traceData.getMap("metrics")),
             Arguments.toBundle(traceData.getMap("attributes")))
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                promise.resolve(task.getResult());
+              } else {
+                rejectPromiseWithExceptionMap(promise, task.getException());
+              }
+            });
+  }
+
+  @ReactMethod
+  public void startScreenTrace(int id, String identifier, Promise promise) {
+    Activity currentActivity = getCurrentActivity();
+
+    // protect against NPEs
+    if (currentActivity == null) {
+      promise.resolve(null);
+      return;
+    }
+
+    module
+        .startScreenTrace(currentActivity, id, identifier)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                promise.resolve(task.getResult());
+              } else {
+                rejectPromiseWithExceptionMap(promise, task.getException());
+              }
+            });
+  }
+
+  @ReactMethod
+  public void stopScreenTrace(int id, Promise promise) {
+    module
+        .stopScreenTrace(id)
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {

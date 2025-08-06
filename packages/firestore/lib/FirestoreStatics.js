@@ -15,19 +15,20 @@
  *
  */
 
-import { NativeModules } from 'react-native';
+import { getReactNativeModule } from '@react-native-firebase/app/lib/internal/nativeModule';
 import FirestoreBlob from './FirestoreBlob';
 import FirestoreFieldPath from './FirestoreFieldPath';
 import FirestoreFieldValue from './FirestoreFieldValue';
 import FirestoreGeoPoint from './FirestoreGeoPoint';
 import FirestoreTimestamp from './FirestoreTimestamp';
-
+import { Filter } from './FirestoreFilter';
 export default {
   Blob: FirestoreBlob,
   FieldPath: FirestoreFieldPath,
   FieldValue: FirestoreFieldValue,
   GeoPoint: FirestoreGeoPoint,
   Timestamp: FirestoreTimestamp,
+  Filter: Filter,
 
   CACHE_SIZE_UNLIMITED: -1,
 
@@ -38,7 +39,7 @@ export default {
       );
     }
 
-    const native = NativeModules.RNFBFirestoreModule;
+    const native = getReactNativeModule('RNFBFirestoreModule');
     native.setLogLevel(logLevel);
   },
 };

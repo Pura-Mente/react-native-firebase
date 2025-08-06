@@ -114,7 +114,6 @@ RCT_EXPORT_METHOD(getToken
                   : (NSString *)senderId
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {
-#if !(TARGET_IPHONE_SIMULATOR)
   if ([UIApplication sharedApplication].isRegisteredForRemoteNotifications == NO) {
     [RNFBSharedUtils
         rejectPromiseWithUserInfo:reject
@@ -126,7 +125,14 @@ RCT_EXPORT_METHOD(getToken
                          }];
     return;
   }
-#endif
+
+  // As of firebase-ios-sdk 10.4.0, an APNS token is strictly required for getToken to work
+  NSData *apnsToken = [FIRMessaging messaging].APNSToken;
+  if (apnsToken == nil) {
+    DLog(@"RNFBMessaging getToken - no APNS token is available. Firebase requires an APNS token to "
+         @"vend an FCM token in firebase-ios-sdk 10.4.0 and higher. See documentation on "
+         @"setAPNSToken and getAPNSToken.")
+  }
 
   [[FIRMessaging messaging]
       retrieveFCMTokenForSenderID:senderId
@@ -160,7 +166,18 @@ RCT_EXPORT_METHOD(getAPNSToken : (RCTPromiseResolveBlock)resolve : (RCTPromiseRe
   if (apnsToken) {
     resolve([RNFBMessagingSerializer APNSTokenFromNSData:apnsToken]);
   } else {
-#if !(TARGET_IPHONE_SIMULATOR)
+#if TARGET_IPHONE_SIMULATOR
+#if !TARGET_CPU_ARM64
+    DLog(@"RNFBMessaging getAPNSToken - Simulator without APNS support detected, with no token "
+         @"set. Use setAPNSToken with an arbitrary string if needed for testing.")
+        resolve([NSNull null]);
+    return;
+#endif
+    DLog(@"RNFBMessaging getAPNSToken - ARM64 Simulator detected, but no APNS token available. "
+         @"APNS token may be possible. macOS13+ / iOS16+ / M1 mac required for assumption to be "
+         @"valid. "
+         @"Use setAPNSToken in testing if needed.");
+#endif
     if ([UIApplication sharedApplication].isRegisteredForRemoteNotifications == NO) {
       [RNFBSharedUtils
           rejectPromiseWithUserInfo:reject
@@ -172,9 +189,27 @@ RCT_EXPORT_METHOD(getAPNSToken : (RCTPromiseResolveBlock)resolve : (RCTPromiseRe
                            }];
       return;
     }
-#endif
     resolve([NSNull null]);
   }
+}
+
+RCT_EXPORT_METHOD(setAPNSToken
+                  : (NSString *)token
+                  : (NSString *)type
+                  : (RCTPromiseResolveBlock)resolve
+                  : (RCTPromiseRejectBlock)reject) {
+  // Default to unknown (determined by provisioning profile) type, but user may have passed type as
+  // param
+  FIRMessagingAPNSTokenType tokenType = FIRMessagingAPNSTokenTypeUnknown;
+  if (type != nil && [@"prod" isEqualToString:type]) {
+    tokenType = FIRMessagingAPNSTokenTypeProd;
+  } else if (type != nil && [@"sandbox" isEqualToString:type]) {
+    tokenType = FIRMessagingAPNSTokenTypeSandbox;
+  }
+
+  [[FIRMessaging messaging] setAPNSToken:[RNFBMessagingSerializer APNSTokenDataFromNSString:token]
+                                    type:tokenType];
+  resolve([NSNull null]);
 }
 
 RCT_EXPORT_METHOD(getIsHeadless : (RCTPromiseResolveBlock)resolve : (RCTPromiseRejectBlock)reject) {
@@ -249,6 +284,15 @@ RCT_EXPORT_METHOD(requestPermission
                             if (error) {
                               [RNFBSharedUtils rejectPromiseWithNSError:reject error:error];
                             } else {
+                              // if we do not attempt to register immediately, registration fails
+                              // later unknown reason why, but this was the only difference between
+                              // using a react-native-permissions vs built-in permissions request in
+                              // a sequence of "request permissions" --> "register for messages" you
+                              // only want to request permission if you want to register for
+                              // messages, so we register directly now - see #7272
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                [[UIApplication sharedApplication] registerForRemoteNotifications];
+                              });
                               [self hasPermission:resolve:reject];
                             }
                           }];
@@ -267,14 +311,21 @@ RCT_EXPORT_METHOD(registerForRemoteNotifications
                   : (RCTPromiseResolveBlock)resolve
                   : (RCTPromiseRejectBlock)reject) {
 #if TARGET_IPHONE_SIMULATOR
+#if !TARGET_CPU_ARM64
+  // Register on this unsupported simulator, but no waiting for a token that won't arrive
+  [[UIApplication sharedApplication] registerForRemoteNotifications];
   resolve(@([RCTConvert BOOL:@(YES)]));
   return;
 #endif
+  DLog(@"RNFBMessaging registerForRemoteNotifications ARM64 Simulator detected, attempting real "
+       @"registration. macOS13+ / iOS16+ / M1 mac required or will timeout.")
+#endif
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunreachable-code"
-  if (@available(iOS 10.0, *)) {
+      if (@available(iOS 10.0, *)) {
 #pragma pop
     if ([UIApplication sharedApplication].isRegisteredForRemoteNotifications == YES) {
+      DLog(@"RNFBMessaging registerForRemoteNotifications - already registered.");
       resolve(@([RCTConvert BOOL:@(YES)]));
       return;
     } else {
@@ -284,9 +335,36 @@ RCT_EXPORT_METHOD(registerForRemoteNotifications
     // Apple docs recommend that registerForRemoteNotifications is always called on app start
     // regardless of current status
     dispatch_async(dispatch_get_main_queue(), ^{
+      // Sometimes the registration never completes, which deserves separate attention in other
+      // areas. This area should protect itself against hanging forever regardless. Just in case,
+      // check in after a delay and cleanup if required
+      dispatch_after(
+          dispatch_time(DISPATCH_TIME_NOW, 10.0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            if ([RNFBMessagingAppDelegate sharedInstance].registerPromiseResolver != nil) {
+              // if we got here and resolve/reject are still set, unset, log failure, reject
+              DLog(@"RNFBMessaging dispatch_after block: we appear to have timed out. Rejecting");
+              [[RNFBMessagingAppDelegate sharedInstance] setPromiseResolve:nil
+                                                          andPromiseReject:nil];
+
+              [RNFBSharedUtils
+                  rejectPromiseWithUserInfo:reject
+                                   userInfo:[@{
+                                     @"code" : @"unknown-error",
+                                     @"message" :
+                                         @"registerDeviceForRemoteMessages requested but "
+                                         @"system did not respond. Possibly missing permission."
+                                   } mutableCopy]];
+              return;
+            } else {
+              DLog(@"RNFBMessaging dispatch_after: registerDeviceForRemoteMessages handled.");
+              return;
+            }
+          });
+
       [[UIApplication sharedApplication] registerForRemoteNotifications];
     });
-  } else {
+  }
+  else {
     [RNFBSharedUtils
         rejectPromiseWithUserInfo:reject
                          userInfo:[@{

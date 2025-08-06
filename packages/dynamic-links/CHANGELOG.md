@@ -3,6 +3,276 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [20.5.0](https://github.com/invertase/react-native-firebase/compare/v20.4.0...v20.5.0) (2024-09-11)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [20.4.0](https://github.com/invertase/react-native-firebase/compare/v20.3.0...v20.4.0) (2024-08-13)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [20.3.0](https://github.com/invertase/react-native-firebase/compare/v20.2.1...v20.3.0) (2024-07-19)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [20.2.1](https://github.com/invertase/react-native-firebase/compare/v20.2.0...v20.2.1) (2024-07-17)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [20.2.0](https://github.com/invertase/react-native-firebase/compare/v20.1.0...v20.2.0) (2024-07-15)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [20.1.0](https://github.com/invertase/react-native-firebase/compare/v20.0.0...v20.1.0) (2024-06-04)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [20.0.0](https://github.com/invertase/react-native-firebase/compare/v19.3.0...v20.0.0) (2024-05-20)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.3.0](https://github.com/invertase/react-native-firebase/compare/v19.2.2...v19.3.0) (2024-05-20)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.2.2](https://github.com/invertase/react-native-firebase/compare/v19.2.1...v19.2.2) (2024-04-13)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.2.1](https://github.com/invertase/react-native-firebase/compare/v19.2.0...v19.2.1) (2024-04-12)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.2.0](https://github.com/invertase/react-native-firebase/compare/v19.1.2...v19.2.0) (2024-04-10)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.1.2](https://github.com/invertase/react-native-firebase/compare/v19.1.1...v19.1.2) (2024-04-03)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.1.1](https://github.com/invertase/react-native-firebase/compare/v19.1.0...v19.1.1) (2024-03-26)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.1.0](https://github.com/invertase/react-native-firebase/compare/v19.0.1...v19.1.0) (2024-03-23)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.0.1](https://github.com/invertase/react-native-firebase/compare/v19.0.0...v19.0.1) (2024-03-07)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [19.0.0](https://github.com/invertase/react-native-firebase/compare/v18.9.0...v19.0.0) (2024-02-26)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.9.0](https://github.com/invertase/react-native-firebase/compare/v18.8.0...v18.9.0) (2024-02-21)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.8.0](https://github.com/invertase/react-native-firebase/compare/v18.7.3...v18.8.0) (2024-01-25)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.7.3](https://github.com/invertase/react-native-firebase/compare/v18.7.2...v18.7.3) (2023-12-13)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.7.2](https://github.com/invertase/react-native-firebase/compare/v18.7.1...v18.7.2) (2023-12-08)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.7.1](https://github.com/invertase/react-native-firebase/compare/v18.7.0...v18.7.1) (2023-11-29)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.7.0](https://github.com/invertase/react-native-firebase/compare/v18.6.2...v18.7.0) (2023-11-28)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.6.2](https://github.com/invertase/react-native-firebase/compare/v18.6.1...v18.6.2) (2023-11-23)
+
+### Bug Fixes
+
+- adopt firebase-ios-sdk 10.18.0 / firebase-android-sdk 32.6.0 ([6a8b25b](https://github.com/invertase/react-native-firebase/commit/6a8b25bc1ed22860d1cef8fa3507ca5df3a28420))
+
+## [18.6.1](https://github.com/invertase/react-native-firebase/compare/v18.6.0...v18.6.1) (2023-11-01)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.6.0](https://github.com/invertase/react-native-firebase/compare/v18.5.0...v18.6.0) (2023-10-26)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.5.0](https://github.com/invertase/react-native-firebase/compare/v18.4.0...v18.5.0) (2023-09-22)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.4.0](https://github.com/invertase/react-native-firebase/compare/v18.3.2...v18.4.0) (2023-09-11)
+
+### Features
+
+- **dynamic-links:** Firebase web V9 modular APIs ([#7296](https://github.com/invertase/react-native-firebase/issues/7296)) ([573a4ee](https://github.com/invertase/react-native-firebase/commit/573a4eee742c2c9b8e255c1a4b02a8e5ecea0eb2))
+
+## [18.3.2](https://github.com/invertase/react-native-firebase/compare/v18.3.1...v18.3.2) (2023-09-02)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.3.1](https://github.com/invertase/react-native-firebase/compare/v18.3.0...v18.3.1) (2023-08-23)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.3.0](https://github.com/invertase/react-native-firebase/compare/v18.2.0...v18.3.0) (2023-07-19)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.2.0](https://github.com/invertase/react-native-firebase/compare/v18.1.0...v18.2.0) (2023-07-13)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.1.0](https://github.com/invertase/react-native-firebase/compare/v18.0.0...v18.1.0) (2023-06-22)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [18.0.0](https://github.com/invertase/react-native-firebase/compare/v17.5.0...v18.0.0) (2023-06-05)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [17.5.0](https://github.com/invertase/react-native-firebase/compare/v17.4.3...v17.5.0) (2023-05-11)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [17.4.3](https://github.com/invertase/react-native-firebase/compare/v17.4.2...v17.4.3) (2023-04-26)
+
+### Bug Fixes
+
+- **expo:** update dependencies of config plugins ([3e81143](https://github.com/invertase/react-native-firebase/commit/3e81143e67028f70c20530b8e1083b2a904f96f4))
+
+### [17.4.2](https://github.com/invertase/react-native-firebase/compare/v17.4.1...v17.4.2) (2023-04-05)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [17.4.1](https://github.com/invertase/react-native-firebase/compare/v17.4.0...v17.4.1) (2023-04-01)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [17.4.0](https://github.com/invertase/react-native-firebase/compare/v17.3.2...v17.4.0) (2023-03-25)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [17.3.2](https://github.com/invertase/react-native-firebase/compare/v17.3.1...v17.3.2) (2023-03-05)
+
+### Bug Fixes
+
+- **expo:** extend expo config plugin regex to match latest version of AppDelegate ([#6957](https://github.com/invertase/react-native-firebase/issues/6957)) ([281deed](https://github.com/invertase/react-native-firebase/commit/281deedb2c23819816d73a864cbc0f6907a7f110))
+
+### [17.3.1](https://github.com/invertase/react-native-firebase/compare/v17.3.0...v17.3.1) (2023-02-23)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [17.3.0](https://github.com/invertase/react-native-firebase/compare/v17.2.0...v17.3.0) (2023-02-15)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [17.2.0](https://github.com/invertase/react-native-firebase/compare/v17.1.0...v17.2.0) (2023-02-15)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [17.1.0](https://github.com/invertase/react-native-firebase/compare/v17.0.0...v17.1.0) (2023-02-09)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [17.0.0](https://github.com/invertase/react-native-firebase/compare/v16.7.0...v17.0.0) (2023-02-02)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [16.7.0](https://github.com/invertase/react-native-firebase/compare/v16.6.0...v16.7.0) (2023-01-28)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [16.6.0](https://github.com/invertase/react-native-firebase/compare/v16.5.2...v16.6.0) (2023-01-27)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [16.5.2](https://github.com/invertase/react-native-firebase/compare/v16.5.1...v16.5.2) (2023-01-23)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [16.5.1](https://github.com/invertase/react-native-firebase/compare/v16.5.0...v16.5.1) (2023-01-20)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [16.5.0](https://github.com/invertase/react-native-firebase/compare/v16.4.6...v16.5.0) (2022-12-16)
+
+### Bug Fixes
+
+- **app, sdks:** ios-sdk 10.3.0 / android-sdk 31.1.1 ([00708b6](https://github.com/invertase/react-native-firebase/commit/00708b680cd837ed23d41b27bb76b2895e719f79))
+
+### [16.4.6](https://github.com/invertase/react-native-firebase/compare/v16.4.5...v16.4.6) (2022-11-18)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [16.4.5](https://github.com/invertase/react-native-firebase/compare/v16.4.4...v16.4.5) (2022-11-16)
+
+### Bug Fixes
+
+- **app, ios:** firebase-ios-sdk 10.2.0 ([443f460](https://github.com/invertase/react-native-firebase/commit/443f460279f6c41ce7aaaeec03a19b14135953eb))
+
+### [16.4.4](https://github.com/invertase/react-native-firebase/compare/v16.4.3...v16.4.4) (2022-11-14)
+
+### Bug Fixes
+
+- **dynamic-links:** expo config plugin conflict with main firebase app plugin ([ab465ec](https://github.com/invertase/react-native-firebase/commit/ab465ec5fa9bea1e1519d9508ad5aee4ece2a032))
+
+### [16.4.3](https://github.com/invertase/react-native-firebase/compare/v16.4.2...v16.4.3) (2022-11-06)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [16.4.2](https://github.com/invertase/react-native-firebase/compare/v16.4.1...v16.4.2) (2022-11-04)
+
+### Bug Fixes
+
+- **dynamic-links, expo:** add plugin build commands ([#6660](https://github.com/invertase/react-native-firebase/issues/6660)) ([3ec3340](https://github.com/invertase/react-native-firebase/commit/3ec334028780c2d947cfd65bace67bf7553a55a6))
+
+### [16.4.1](https://github.com/invertase/react-native-firebase/compare/v16.4.0...v16.4.1) (2022-11-02)
+
+### Bug Fixes
+
+- **dynamic-links, ios:** expo config plugin automates dynamic-links workaround ([#6650](https://github.com/invertase/react-native-firebase/issues/6650)) ([e558ad7](https://github.com/invertase/react-native-firebase/commit/e558ad78f62101be3549ab1c605654007b54a38f)), closes [#2660](https://github.com/invertase/react-native-firebase/issues/2660)
+
+## [16.4.0](https://github.com/invertase/react-native-firebase/compare/v16.3.1...v16.4.0) (2022-10-30)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [16.3.1](https://github.com/invertase/react-native-firebase/compare/v16.3.0...v16.3.1) (2022-10-28)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [16.3.0](https://github.com/invertase/react-native-firebase/compare/v16.2.0...v16.3.0) (2022-10-26)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [16.2.0](https://github.com/invertase/react-native-firebase/compare/v16.1.1...v16.2.0) (2022-10-23)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+### [16.1.1](https://github.com/invertase/react-native-firebase/compare/v16.1.0...v16.1.1) (2022-10-21)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [16.1.0](https://github.com/invertase/react-native-firebase/compare/v16.0.0...v16.1.0) (2022-10-20)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [16.0.0](https://github.com/invertase/react-native-firebase/compare/v15.7.1...v16.0.0) (2022-10-19)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
+## [15.7.1](https://github.com/invertase/react-native-firebase/compare/v15.7.0...v15.7.1) (2022-10-19)
+
+**Note:** Version bump only for package @react-native-firebase/dynamic-links
+
 # [15.7.0](https://github.com/invertase/react-native-firebase/compare/v15.6.0...v15.7.0) (2022-10-01)
 
 ### Features

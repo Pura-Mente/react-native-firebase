@@ -21,10 +21,12 @@ import {
   FirebaseModule,
   getFirebaseRoot,
 } from '@react-native-firebase/app/lib/internal';
+import { setReactNativeModule } from '@react-native-firebase/app/lib/internal/nativeModule';
 import DatabaseReference from './DatabaseReference';
 import DatabaseStatics from './DatabaseStatics';
 import DatabaseTransaction from './DatabaseTransaction';
 import version from './version';
+import fallBackModule from './web/RNFBDatabaseModule';
 
 const namespace = 'database';
 
@@ -216,7 +218,13 @@ export default createModuleNamespace({
   ModuleClass: FirebaseDatabaseModule,
 });
 
+export * from './modular';
+
 // import database, { firebase } from '@react-native-firebase/database';
 // database().X(...);
 // firebase.database().X(...);
 export const firebase = getFirebaseRoot();
+
+for (let i = 0; i < nativeModuleName.length; i++) {
+  setReactNativeModule(nativeModuleName[i], fallBackModule);
+}

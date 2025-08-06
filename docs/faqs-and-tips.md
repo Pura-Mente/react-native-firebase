@@ -73,6 +73,8 @@ Sometimes, after step 3, you have to click inside a "Text color" field, but this
 
 ### On iOS, when the app is in quit state, the setBackgroundMessageHandler is never invoked even when I receive the notification. How can I fix this?
 
+> Note: If you use @notifee/react-native, since v7.0.0, `onNotificationOpenedApp` and `getInitialNotification` will no longer trigger as notifee will handle the event.
+
 When the app is closed/quit, this can happen even when you are getting notifications and even when you are able to invoke the app in a headless state.
 
 To fix this:
@@ -86,7 +88,7 @@ To view the complete detail for this solution, please refer to this page: [#5656
 
 - Whenever you face a strange issue (or an issue that causes build errors), there are two things you should always consider.
   - Build processes are costly and complex, so caching is used a lot. As a result, certain changes that you make in your app can cause cache conflicts in subsequent builds. Deal with this via `npx react-native-clean-project`. This does solve a lot of problems.
-  - Try an isolate the problem with a template React Native Firebase app. This [bash script](https://github.com/mikehardy/rnfbdemo/blob/master/make-demo.sh) is particularly helpful in making an empty template app.
+  - Try and isolate the problem with a template React Native Firebase app. This [bash script](https://github.com/mikehardy/rnfbdemo/blob/main/make-demo.sh) is particularly helpful in making an empty template app.
 - Advice on supporting multiple environments (for example, dev, prod, maybe also staging, qa) for your React Native Firebase App: [#3504](https://github.com/invertase/react-native-firebase/issues/3504)
 - Using [Fastlane for iOS deployment](https://docs.fastlane.tools/getting-started/ios) together with [RN Firebase Crashlytics](https://rnfirebase.io/crashlytics/usage) within CI has been observed to cause builds that hang indefinitely. Using `setup_ci(force: true)` before building the application may solve the issue.: [#3706](https://github.com/invertase/react-native-firebase/issues/3706)
 - Be careful if you are using a VPN, Google blocks many VPN IPs causing "unavailable" errors for various firebase API calls, and on an Android emulator it might completely mess up the network adapter causing network calls to never return, not only on firebase but on the entire emulated phone.

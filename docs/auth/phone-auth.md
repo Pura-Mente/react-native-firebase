@@ -1,7 +1,7 @@
 ---
 title: Phone Authentication
 description: Sign-in users with their phone number.
-next: /firestore/usage
+next: /auth/oidc-auth
 previous: /auth/social-auth
 ---
 
@@ -29,6 +29,24 @@ For reliable automated testing, you may want to disable both automatic and fallb
 
 Ensure that all parts of step 1 and 2 from [the official firebase Android phone auth docs](https://firebase.google.com/docs/auth/android/phone-auth#enable-phone-number-sign-in-for-your-firebase-project) have been followed.
 
+To bypass Play Integrity for manual testing, you may [force reCAPTCHA to be used](https://rnfirebase.io/reference/auth/authsettings#appVerificationDisabledForTesting) prior to calling [`verifyPhoneNumber`](https://rnfirebase.io/reference/auth/phoneauthprovider#verifyPhoneNumber).
+
+# Expo Setup
+
+To use phone auth in an expo app, add the `@react-native-firebase/auth` config plug-in to the [`plugins`](https://docs.expo.io/versions/latest/config/app/#plugins) section of your `app.json`. This is in addition to the `@react-native-firebase/app` plugin.
+
+```json
+{
+  "expo": {
+    "plugins": ["@react-native-firebase/app", "@react-native-firebase/auth"]
+  }
+}
+```
+
+The `@react-native-firebase/auth` config plugin is not required for all auth providers, but it is required to use phone auth. The plugin [will set up reCAPTCHA](https://firebase.google.com/docs/auth/ios/phone-auth#set-up-recaptcha-verification) verification for you on iOS.
+
+The recommendation is to use a [custom development client](https://docs.expo.dev/clients/getting-started/). For more info on using Expo with React Native Firebase, see our [Expo docs](/#expo).
+
 # Sign-in
 
 The module provides a `signInWithPhoneNumber` method which accepts a phone number. Firebase sends an SMS message to the
@@ -38,7 +56,7 @@ a code. Based on whether the code is correct for the device, the method rejects 
 The example below demonstrates how you could setup such a flow within your own application:
 
 ```jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, TextInput } from 'react-native';
 import auth from '@react-native-firebase/auth';
 
@@ -46,7 +64,23 @@ function PhoneSignIn() {
   // If null, no SMS has been sent
   const [confirm, setConfirm] = useState(null);
 
+  // verification code (OTP - One-Time-Passcode)
   const [code, setCode] = useState('');
+
+  // Handle login
+  function onAuthStateChanged(user) {
+    if (user) {
+      // Some Android devices can automatically process the verification code (OTP) message, and the user would NOT need to enter the code.
+      // Actually, if he/she tries to enter it, he/she will get an error message because the code was already used in the background.
+      // In this function, make sure you hide the component(s) for entering the code and/or navigate away from this screen.
+      // It is also recommended to display a message to the user informing him/her that he/she has successfully logged in.
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
 
   // Handle the button press
   async function signInWithPhoneNumber(phoneNumber) {

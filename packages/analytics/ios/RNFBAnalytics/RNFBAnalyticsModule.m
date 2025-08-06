@@ -115,7 +115,7 @@ RCT_EXPORT_METHOD(setSessionTimeoutDuration
                   : (double)milliseconds resolver
                   : (RCTPromiseResolveBlock)resolve rejecter
                   : (RCTPromiseRejectBlock)reject) {
-  // Do nothing - this only exists in android
+  [FIRAnalytics setSessionTimeoutInterval:milliseconds / 1000];
   return resolve([NSNull null]);
 }
 
@@ -123,6 +123,19 @@ RCT_EXPORT_METHOD(getAppInstanceId
                   : (RCTPromiseResolveBlock)resolve rejecter
                   : (RCTPromiseRejectBlock)reject) {
   return resolve([FIRAnalytics appInstanceID]);
+}
+
+RCT_EXPORT_METHOD(getSessionId
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  [FIRAnalytics sessionIDWithCompletion:^(int64_t sessionID, NSError *_Nullable error) {
+    if (error) {
+      DLog(@"Error getting session ID: %@", error);
+      return resolve([NSNull null]);
+    } else {
+      return resolve([NSNumber numberWithLongLong:sessionID]);
+    }
+  }];
 }
 
 RCT_EXPORT_METHOD(setDefaultEventParameters
@@ -148,6 +161,70 @@ RCT_EXPORT_METHOD(initiateOnDeviceConversionMeasurementWithEmailAddress
     return [RNFBSharedUtils rejectPromiseWithExceptionDict:reject exception:exception];
   }
 
+  return resolve([NSNull null]);
+}
+
+RCT_EXPORT_METHOD(initiateOnDeviceConversionMeasurementWithHashedEmailAddress
+                  : (NSString *)hashedEmailAddress resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  @try {
+    NSData *emailAddress = [hashedEmailAddress dataUsingEncoding:NSUTF8StringEncoding];
+    [FIRAnalytics initiateOnDeviceConversionMeasurementWithHashedEmailAddress:emailAddress];
+  } @catch (NSException *exception) {
+    return [RNFBSharedUtils rejectPromiseWithExceptionDict:reject exception:exception];
+  }
+
+  return resolve([NSNull null]);
+}
+
+RCT_EXPORT_METHOD(initiateOnDeviceConversionMeasurementWithPhoneNumber
+                  : (NSString *)phoneNumber resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  @try {
+    [FIRAnalytics initiateOnDeviceConversionMeasurementWithPhoneNumber:phoneNumber];
+  } @catch (NSException *exception) {
+    return [RNFBSharedUtils rejectPromiseWithExceptionDict:reject exception:exception];
+  }
+
+  return resolve([NSNull null]);
+}
+
+RCT_EXPORT_METHOD(initiateOnDeviceConversionMeasurementWithHashedPhoneNumber
+                  : (NSString *)hashedPhoneNumber resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  @try {
+    NSData *phoneNumber = [hashedPhoneNumber dataUsingEncoding:NSUTF8StringEncoding];
+    [FIRAnalytics initiateOnDeviceConversionMeasurementWithHashedPhoneNumber:phoneNumber];
+  } @catch (NSException *exception) {
+    return [RNFBSharedUtils rejectPromiseWithExceptionDict:reject exception:exception];
+  }
+
+  return resolve([NSNull null]);
+}
+
+RCT_EXPORT_METHOD(setConsent
+                  : (NSDictionary *)consentSettings resolver
+                  : (RCTPromiseResolveBlock)resolve rejecter
+                  : (RCTPromiseRejectBlock)reject) {
+  @try {
+    BOOL analyticsStorage = [consentSettings[@"analytics_storage"] boolValue];
+    BOOL adStorage = [consentSettings[@"ad_storage"] boolValue];
+    BOOL adUserData = [consentSettings[@"ad_user_data"] boolValue];
+    BOOL adPersonalization = [consentSettings[@"ad_personalization"] boolValue];
+    [FIRAnalytics setConsent:@{
+      FIRConsentTypeAnalyticsStorage : analyticsStorage ? FIRConsentStatusGranted
+                                                        : FIRConsentStatusDenied,
+      FIRConsentTypeAdStorage : adStorage ? FIRConsentStatusGranted : FIRConsentStatusDenied,
+      FIRConsentTypeAdUserData : adUserData ? FIRConsentStatusGranted : FIRConsentStatusDenied,
+      FIRConsentTypeAdPersonalization : adPersonalization ? FIRConsentStatusGranted
+                                                          : FIRConsentStatusDenied,
+    }];
+  } @catch (NSException *exception) {
+    return [RNFBSharedUtils rejectPromiseWithExceptionDict:reject exception:exception];
+  }
   return resolve([NSNull null]);
 }
 

@@ -30,7 +30,7 @@ import {
   FirebaseModule,
   getFirebaseRoot,
 } from '@react-native-firebase/app/lib/internal';
-import { AppRegistry } from 'react-native';
+import { AppRegistry, Platform } from 'react-native';
 import remoteMessageOptions from './remoteMessageOptions';
 import version from './version';
 
@@ -166,7 +166,7 @@ class FirebaseMessagingModule extends FirebaseModule {
 
   getToken({ appName, senderId } = {}) {
     if (!isUndefined(appName) && !isString(appName)) {
-      throw new Error("firebase.messaging().getToken(*) 'projectId' expected a string.");
+      throw new Error("firebase.messaging().getToken(*) 'appName' expected a string.");
     }
 
     if (!isUndefined(senderId) && !isString(senderId)) {
@@ -181,7 +181,7 @@ class FirebaseMessagingModule extends FirebaseModule {
 
   deleteToken({ appName, senderId } = {}) {
     if (!isUndefined(appName) && !isString(appName)) {
-      throw new Error("firebase.messaging().deleteToken(*) 'projectId' expected a string.");
+      throw new Error("firebase.messaging().deleteToken(*) 'appName' expected a string.");
     }
 
     if (!isUndefined(senderId) && !isString(senderId)) {
@@ -307,6 +307,27 @@ class FirebaseMessagingModule extends FirebaseModule {
       return Promise.resolve(null);
     }
     return this.native.getAPNSToken();
+  }
+
+  /**
+   * @platform ios
+   */
+  setAPNSToken(token, type) {
+    if (isUndefined(token) || !isString(token)) {
+      throw new Error("firebase.messaging().setAPNSToken(*) 'token' expected a string value.");
+    }
+
+    if (!isUndefined(type) && (!isString(type) || !['prod', 'sandbox', 'unknown'].includes(type))) {
+      throw new Error(
+        "firebase.messaging().setAPNSToken(*) 'type' expected one of 'prod', 'sandbox', or 'unknown'.",
+      );
+    }
+
+    if (isAndroid) {
+      return Promise.resolve(null);
+    }
+
+    return this.native.setAPNSToken(token, type);
   }
 
   hasPermission() {
@@ -448,6 +469,15 @@ class FirebaseMessagingModule extends FirebaseModule {
     this._isDeliveryMetricsExportToBigQueryEnabled = enabled;
     return this.native.setDeliveryMetricsExportToBigQuery(enabled);
   }
+
+  async isSupported() {
+    if (Platform.isAndroid) {
+      playServicesAvailability = firebase.utils().playServicesAvailability;
+      return playServicesAvailability.isAvailable;
+    }
+    // Always return "true" for iOS. Web will be implemented when it is supported
+    return true;
+  }
 }
 
 // import { SDK_VERSION } from '@react-native-firebase/messaging';
@@ -475,6 +505,8 @@ export default createModuleNamespace({
   hasCustomUrlOrRegionSupport: false,
   ModuleClass: FirebaseMessagingModule,
 });
+
+export * from './modular';
 
 // import messaging, { firebase } from '@react-native-firebase/messaging';
 // messaging().X(...);

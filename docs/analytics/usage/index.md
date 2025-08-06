@@ -157,6 +157,18 @@ of your app handle data in a way that requires ATT)
 
 Note that for obvious reasons, configuring Firebase Analytics for use without IDFA is incompatible with AdMob
 
+# Device Identification
+
+If you would like to enable Firebase Analytics to generate automatic audience metrics for iOS (as it does by default in Android), you must link additional iOS libraries, [as documented by the Google Firebase team](https://support.google.com/firebase/answer/6318039). Specifically you need to link in `AdSupport.framework`.
+
+The way to do this using CocoaPods is to add this variable to your `Podfile` so `@react-native-firebase/analytics` will link it in for you:
+
+```ruby
+$RNFirebaseAnalyticsEnableAdSupport = true
+```
+
+Note: this is setting will have no effect if you disabled Ad IDs as described above, since this setting is specifically linking in the `AdSupport` framework which requires the Ad IDs.
+
 # firebase.json
 
 ## Disable Auto-Initialization
@@ -182,6 +194,19 @@ import { firebase } from '@react-native-firebase/analytics';
 await firebase.analytics().setAnalyticsCollectionEnabled(true);
 ```
 
+To update user's consent (e.g. once you have the users consent), call the `setConsent` method:
+
+```js
+import { firebase } from '@react-native-firebase/analytics';
+// ...
+await firebase.analytics().setConsent({
+  analytics_storage: true,
+  ad_storage: true,
+  ad_user_data: true,
+  ad_personalization: true,
+});
+```
+
 ## Disable screenview tracking
 
 Analytics automatically tracks some information about screens in your application, such as the class name of the UIViewController or Activity that is currently in focus.
@@ -195,3 +220,15 @@ Automatic screenview reporting can be turned off/on through `google_analytics_au
   }
 }
 ```
+
+# Seeing Events in Firebase Console's DebugView
+
+## iOS
+
+When running on iOS in debug, events won't be logged by default. If you want to see events in DebugView in the Firebase Console when running debug builds, you'll need to [first set a flag](https://firebase.google.com/docs/analytics/debugview#ios+) when launching in debug. This flag used to be variously called `-FIRAnalyticsDebugEnabled` and `-FIRDebugEnabled`, but please check the previous link.
+
+To always set the flag when running debug builds of your app, you can [edit your scheme in Xcode](https://stackoverflow.com/questions/5025256/how-do-you-specify-command-line-arguments-in-xcode-4) to always include the flag.
+
+## Android
+
+When running on Android in debug, events won't be logged by default. If you want to see events in DebugView in the Firebase Console when running debug builds, you'll need to run the following command on the terminal `adb shell setprop debug.firebase.analytics.app <package-name>` - where `<package-name>` should be replaced with your app's package name.

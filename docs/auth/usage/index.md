@@ -130,7 +130,7 @@ Once successfully signed in, any [`onAuthStateChanged`](#listening-to-authentica
 with the [`User`](/reference/auth/user) details.
 
 In case any errors occur, the module provides support for identifying what specifically went wrong by attaching a code
-to the error. For a full list of error codes available, view the [Firebase documentation](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#error-codes_9).
+to the error. For a full list of error codes available, view the [Firebase documentation](https://firebase.google.com/docs/reference/js/auth.md#autherrorcodes).
 
 ## Email/Password sign-in
 
@@ -168,7 +168,7 @@ Once successfully created and/or signed in, any [`onAuthStateChanged`](#listenin
 with the [`User`](/reference/auth/user) details.
 
 In case any errors occur, the module provides support for identifying what specifically went wrong by attaching a code
-to the error. For a full list of error codes available, view the [Firebase documentation](https://firebase.google.com/docs/reference/js/firebase.auth.Auth#error-codes_3).
+to the error. For a full list of error codes available, view the [Firebase documentation](https://firebase.google.com/docs/reference/js/auth.md#autherrorcodes).
 
 ## Authenticate with backend server
 
@@ -186,8 +186,10 @@ auth()
   .then(() => console.log('User signed out!'));
 ```
 
-Once successfully created and/or signed in, any [`onAuthStateChanged`](#listening-to-authentication-state) listeners will trigger an event
+Once successfully signed out, any [`onAuthStateChanged`](#listening-to-authentication-state) listeners will trigger an event
 with the `user` parameter being a `null` value.
+
+Additionally, using `GoogleSignin.revokeAccess()` forgets the user. This means that the next time someone signs in, they will see the account selection popup. If you don't use this function, the last account will be automatically used without showing the account selection popup.
 
 ## Other sign-in methods
 
@@ -198,4 +200,5 @@ method:
 - [Facebook Sign-In](/auth/social-auth#facebook).
 - [Twitter Sign-In](/auth/social-auth#twitter).
 - [Google Sign-In](/auth/social-auth#google).
+- [Microsoft Sign-In](/auth/social-auth#microsoft).
 - [Phone Number Sign-In](/auth/phone-auth).

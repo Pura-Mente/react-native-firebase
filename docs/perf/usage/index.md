@@ -38,7 +38,7 @@ Add the plugin to your `/android/build.gradle` file as a dependency:
 buildscript {
     dependencies {
         // ...
-        classpath 'com.google.firebase:perf-plugin:1.4.1'
+        classpath 'com.google.firebase:perf-plugin:1.4.2'
     }
 ```
 
@@ -83,6 +83,26 @@ async function customTrace() {
 
   // Stop the trace
   await trace.stop();
+}
+```
+
+## Custom screen traces
+
+Record a custom screen rendering trace (slow frames / frozen frames)
+
+```jsx
+import perf from '@react-native-firebase/perf';
+
+async function screenTrace() {
+  // Define & start a screen trace
+  try {
+    const trace = await perf().startScreenTrace('FooScreen');
+    // Stop the trace
+    await trace.stop();
+  } catch (e) {
+    // rejects if iOS or (Android == 8 || Android == 8.1)
+    // or if hardware acceleration is off
+  }
 }
 ```
 

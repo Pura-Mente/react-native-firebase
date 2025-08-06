@@ -3,6 +3,289 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [20.5.0](https://github.com/invertase/react-native-firebase/compare/v20.4.0...v20.5.0) (2024-09-11)
+
+### Bug Fixes
+
+- **messaging, android:** handle nullable broadcast intent ([#7893](https://github.com/invertase/react-native-firebase/issues/7893)) ([#7960](https://github.com/invertase/react-native-firebase/issues/7960)) ([c1ac022](https://github.com/invertase/react-native-firebase/commit/c1ac022e4e9d3effb2f0fb3404ad375d9fcbe4b6))
+- **messaging, ios:** fixed isHeadless for react-native-navigation ([#7868](https://github.com/invertase/react-native-firebase/issues/7868)) ([3875cc6](https://github.com/invertase/react-native-firebase/commit/3875cc6077e5fd6b35e201356aca632e43a2e301))
+
+## [20.4.0](https://github.com/invertase/react-native-firebase/compare/v20.3.0...v20.4.0) (2024-08-13)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [20.3.0](https://github.com/invertase/react-native-firebase/compare/v20.2.1...v20.3.0) (2024-07-19)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [20.2.1](https://github.com/invertase/react-native-firebase/compare/v20.2.0...v20.2.1) (2024-07-17)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [20.2.0](https://github.com/invertase/react-native-firebase/compare/v20.1.0...v20.2.0) (2024-07-15)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [20.1.0](https://github.com/invertase/react-native-firebase/compare/v20.0.0...v20.1.0) (2024-06-04)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [20.0.0](https://github.com/invertase/react-native-firebase/compare/v19.3.0...v20.0.0) (2024-05-20)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [19.3.0](https://github.com/invertase/react-native-firebase/compare/v19.2.2...v19.3.0) (2024-05-20)
+
+### Bug Fixes
+
+- **messaging, ios:** register for notifications on permission grant ([ccd78b9](https://github.com/invertase/react-native-firebase/commit/ccd78b9cf5d6961f5252e582ede785932599d25d)), closes [#7272](https://github.com/invertase/react-native-firebase/issues/7272)
+- **messaging, ios:** reject notification registration after 10 seconds ([1f86483](https://github.com/invertase/react-native-firebase/commit/1f8648329ce812644f4bbd0f0caadcfe6a0bbddf)), closes [#7272](https://github.com/invertase/react-native-firebase/issues/7272)
+
+## [19.2.2](https://github.com/invertase/react-native-firebase/compare/v19.2.1...v19.2.2) (2024-04-13)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [19.2.1](https://github.com/invertase/react-native-firebase/compare/v19.2.0...v19.2.1) (2024-04-12)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [19.2.0](https://github.com/invertase/react-native-firebase/compare/v19.1.2...v19.2.0) (2024-04-10)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [19.1.2](https://github.com/invertase/react-native-firebase/compare/v19.1.1...v19.1.2) (2024-04-03)
+
+### Bug Fixes
+
+- **deps, ios:** FirebaseCoreExtension is not always versioned ([cb7ed0e](https://github.com/invertase/react-native-firebase/commit/cb7ed0eb15758a4324d2ce785513a48bfe54fe1e))
+
+## [19.1.1](https://github.com/invertase/react-native-firebase/compare/v19.1.0...v19.1.1) (2024-03-26)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [19.1.0](https://github.com/invertase/react-native-firebase/compare/v19.0.1...v19.1.0) (2024-03-23)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [19.0.1](https://github.com/invertase/react-native-firebase/compare/v19.0.0...v19.0.1) (2024-03-07)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [19.0.0](https://github.com/invertase/react-native-firebase/compare/v18.9.0...v19.0.0) (2024-02-26)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.9.0](https://github.com/invertase/react-native-firebase/compare/v18.8.0...v18.9.0) (2024-02-21)
+
+### Bug Fixes
+
+- **auth:** use correct app instance (vs always default) in multifactor and phone auth ([#7564](https://github.com/invertase/react-native-firebase/issues/7564)) ([ff32fd3](https://github.com/invertase/react-native-firebase/commit/ff32fd37b39557e9a55fce016cbf986348436b92))
+- **messaging, ios:** resolve getAPNSToken promise in all cases ([b30eee1](https://github.com/invertase/react-native-firebase/commit/b30eee1b97b4290474c00607342befda55272075)), closes [#7272](https://github.com/invertase/react-native-firebase/issues/7272)
+
+## [18.8.0](https://github.com/invertase/react-native-firebase/compare/v18.7.3...v18.8.0) (2024-01-25)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.7.3](https://github.com/invertase/react-native-firebase/compare/v18.7.2...v18.7.3) (2023-12-13)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.7.2](https://github.com/invertase/react-native-firebase/compare/v18.7.1...v18.7.2) (2023-12-08)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.7.1](https://github.com/invertase/react-native-firebase/compare/v18.7.0...v18.7.1) (2023-11-29)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.7.0](https://github.com/invertase/react-native-firebase/compare/v18.6.2...v18.7.0) (2023-11-28)
+
+### Features
+
+- **messaging:** Adding support for Firebase Messaging via Expo config plugin. ([#7369](https://github.com/invertase/react-native-firebase/issues/7369)) ([34152ed](https://github.com/invertase/react-native-firebase/commit/34152edd189bc899e85cb4ceee92d44f1175a422))
+
+## [18.6.2](https://github.com/invertase/react-native-firebase/compare/v18.6.1...v18.6.2) (2023-11-23)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.6.1](https://github.com/invertase/react-native-firebase/compare/v18.6.0...v18.6.1) (2023-11-01)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.6.0](https://github.com/invertase/react-native-firebase/compare/v18.5.0...v18.6.0) (2023-10-26)
+
+### Bug Fixes
+
+- **android:** required compatibility for Gradle 8 in android modules ([b52d0ce](https://github.com/invertase/react-native-firebase/commit/b52d0ce6723c077190618641ce0f33ced9fd4090))
+
+## [18.5.0](https://github.com/invertase/react-native-firebase/compare/v18.4.0...v18.5.0) (2023-09-22)
+
+### Bug Fixes
+
+- **messaging:** RemoteMessage.data may be JSON-serializable object as well as string ([#7316](https://github.com/invertase/react-native-firebase/issues/7316)) ([7945a24](https://github.com/invertase/react-native-firebase/commit/7945a2485a4a93fa40c509e518da23317a82b489))
+
+## [18.4.0](https://github.com/invertase/react-native-firebase/compare/v18.3.2...v18.4.0) (2023-09-11)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.3.2](https://github.com/invertase/react-native-firebase/compare/v18.3.1...v18.3.2) (2023-09-02)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.3.1](https://github.com/invertase/react-native-firebase/compare/v18.3.0...v18.3.1) (2023-08-23)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.3.0](https://github.com/invertase/react-native-firebase/compare/v18.2.0...v18.3.0) (2023-07-19)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.2.0](https://github.com/invertase/react-native-firebase/compare/v18.1.0...v18.2.0) (2023-07-13)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.1.0](https://github.com/invertase/react-native-firebase/compare/v18.0.0...v18.1.0) (2023-06-22)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [18.0.0](https://github.com/invertase/react-native-firebase/compare/v17.5.0...v18.0.0) (2023-06-05)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [17.5.0](https://github.com/invertase/react-native-firebase/compare/v17.4.3...v17.5.0) (2023-05-11)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [17.4.3](https://github.com/invertase/react-native-firebase/compare/v17.4.2...v17.4.3) (2023-04-26)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [17.4.2](https://github.com/invertase/react-native-firebase/compare/v17.4.1...v17.4.2) (2023-04-05)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [17.4.1](https://github.com/invertase/react-native-firebase/compare/v17.4.0...v17.4.1) (2023-04-01)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [17.4.0](https://github.com/invertase/react-native-firebase/compare/v17.3.2...v17.4.0) (2023-03-25)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [17.3.2](https://github.com/invertase/react-native-firebase/compare/v17.3.1...v17.3.2) (2023-03-05)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [17.3.1](https://github.com/invertase/react-native-firebase/compare/v17.3.0...v17.3.1) (2023-02-23)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [17.3.0](https://github.com/invertase/react-native-firebase/compare/v17.2.0...v17.3.0) (2023-02-15)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [17.2.0](https://github.com/invertase/react-native-firebase/compare/v17.1.0...v17.2.0) (2023-02-15)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [17.1.0](https://github.com/invertase/react-native-firebase/compare/v17.0.0...v17.1.0) (2023-02-09)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [17.0.0](https://github.com/invertase/react-native-firebase/compare/v16.7.0...v17.0.0) (2023-02-02)
+
+### ⚠ BREAKING CHANGES
+
+- **app, ios:** You must have an APNS token before calling getToken to
+  get an FCM token on iOS. Previously it was not required. See documentation
+  for setAPNSToken if you are using getToken in testing or have disabled
+  FCM Swizzling, and use setAPNSToken to set a token before using getToken
+
+### Features
+
+- **app, ios:** adopt firebase-ios-sdk 10.4.0 ([1b8df4c](https://github.com/invertase/react-native-firebase/commit/1b8df4c8e55d474c09e301f9c7b58b6128ae6485))
+- **messaging, ios:** new setAPNSToken API / getToken works on M1 Simulator ([8d75b36](https://github.com/invertase/react-native-firebase/commit/8d75b36f485af07ecfa653192ca56f761d0cc5b7))
+
+## [16.7.0](https://github.com/invertase/react-native-firebase/compare/v16.6.0...v16.7.0) (2023-01-28)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [16.6.0](https://github.com/invertase/react-native-firebase/compare/v16.5.2...v16.6.0) (2023-01-27)
+
+### Features
+
+- **messaging:** Expose modular API that matches the Firebase web JS SDK v9 API ([#6806](https://github.com/invertase/react-native-firebase/issues/6806)) ([da82c10](https://github.com/invertase/react-native-firebase/commit/da82c1036051f0518da0401de24cef24c7ac091f))
+
+### [16.5.2](https://github.com/invertase/react-native-firebase/compare/v16.5.1...v16.5.2) (2023-01-23)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [16.5.1](https://github.com/invertase/react-native-firebase/compare/v16.5.0...v16.5.1) (2023-01-20)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [16.5.0](https://github.com/invertase/react-native-firebase/compare/v16.4.6...v16.5.0) (2022-12-16)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [16.4.6](https://github.com/invertase/react-native-firebase/compare/v16.4.5...v16.4.6) (2022-11-18)
+
+### Bug Fixes
+
+- **app, android:** firebase-android-sdk 31.1.0 ([af089c0](https://github.com/invertase/react-native-firebase/commit/af089c00496aa55e66ea83e87b8cf54c8144c9fb))
+
+### [16.4.5](https://github.com/invertase/react-native-firebase/compare/v16.4.4...v16.4.5) (2022-11-16)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [16.4.4](https://github.com/invertase/react-native-firebase/compare/v16.4.3...v16.4.4) (2022-11-14)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [16.4.3](https://github.com/invertase/react-native-firebase/compare/v16.4.2...v16.4.3) (2022-11-06)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [16.4.2](https://github.com/invertase/react-native-firebase/compare/v16.4.1...v16.4.2) (2022-11-04)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [16.4.1](https://github.com/invertase/react-native-firebase/compare/v16.4.0...v16.4.1) (2022-11-02)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [16.4.0](https://github.com/invertase/react-native-firebase/compare/v16.3.1...v16.4.0) (2022-10-30)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [16.3.1](https://github.com/invertase/react-native-firebase/compare/v16.3.0...v16.3.1) (2022-10-28)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [16.3.0](https://github.com/invertase/react-native-firebase/compare/v16.2.0...v16.3.0) (2022-10-26)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [16.2.0](https://github.com/invertase/react-native-firebase/compare/v16.1.1...v16.2.0) (2022-10-23)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+### [16.1.1](https://github.com/invertase/react-native-firebase/compare/v16.1.0...v16.1.1) (2022-10-21)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [16.1.0](https://github.com/invertase/react-native-firebase/compare/v16.0.0...v16.1.0) (2022-10-20)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [16.0.0](https://github.com/invertase/react-native-firebase/compare/v15.7.1...v16.0.0) (2022-10-19)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
+## [15.7.1](https://github.com/invertase/react-native-firebase/compare/v15.7.0...v15.7.1) (2022-10-19)
+
+**Note:** Version bump only for package @react-native-firebase/messaging
+
 # [15.7.0](https://github.com/invertase/react-native-firebase/compare/v15.6.0...v15.7.0) (2022-10-01)
 
 **Note:** Version bump only for package @react-native-firebase/messaging

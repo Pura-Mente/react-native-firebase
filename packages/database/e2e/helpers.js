@@ -1,11 +1,28 @@
 const testingUtils = require('@firebase/rules-unit-testing');
+const { getE2eTestProject, getE2eEmulatorHost } = require('../../app/e2e/helpers');
 
 // TODO make more unique?
 const ID = Date.now();
 
 const PATH = `tests/${ID}`;
-const DB_NAME = 'react-native-firebase-testing';
-const DB_RULES = `{ "rules": {".read": false, ".write": false, "tests": {".read": true, ".write": true } } }`;
+const DB_NAME = getE2eTestProject();
+const DB_RULES = {
+  rules: {
+    '.read': false,
+    '.write': false,
+    tests: {
+      '.read': true,
+      '.write': true,
+      $dynamic: {
+        once: {
+          childMoved: {
+            '.indexOn': ['nuggets'],
+          },
+        },
+      },
+    },
+  },
+};
 
 const CONTENT = {
   TYPES: {
@@ -39,9 +56,15 @@ exports.seed = function seed(path) {
     firebase.database().ref(`${path}/types`).set(CONTENT.TYPES),
     firebase.database().ref(`${path}/query`).set(CONTENT.QUERY),
     // The database emulator does not load rules correctly. We force them pre-test.
+    // TODO(ehesp): This is current erroring - however without it, we can't test rules.
     testingUtils.initializeTestEnvironment({
-      projectId: 'react-native-firebase-testing',
-      database: { databaseName: DB_NAME, rules: DB_RULES, host: 'localhost', port: 9000 },
+      projectId: getE2eTestProject(),
+      database: {
+        databaseName: DB_NAME,
+        rules: JSON.stringify(DB_RULES),
+        host: getE2eEmulatorHost(),
+        port: 9000,
+      },
     }),
   ]);
 };

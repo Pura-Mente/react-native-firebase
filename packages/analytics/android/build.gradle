@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-      classpath("com.android.tools.build:gradle:7.0.4")
+      classpath("com.android.tools.build:gradle:8.4.0")
     }
   }
 }
@@ -65,8 +65,11 @@ apply from: file('./../../app/android/firebase-json.gradle')
 String collectionDeactivated = 'false'
 String adidEnabled = 'true'
 String ssaidEnabled = 'true'
-String personalizationEnabled = 'true'
 String automaticScreenReportingEnabled = 'true'
+String analyticsStorageEnabled = 'true'
+String adStorageEnabled = 'true'
+String adUserDataEnabled = 'true'
+String personalizationEnabled = 'true'
 
 // If nothing is defined, data collection defaults to true
 String dataCollectionEnabled = 'true'
@@ -96,15 +99,29 @@ if (rootProject.ext && rootProject.ext.firebaseJson) {
   if (rnfbConfig.isFlagEnabled('google_analytics_ssaid_collection_enabled', true) == false) {
     ssaidEnabled = 'false'
   }
-  if (rnfbConfig.isFlagEnabled('analytics_default_allow_ad_personalization_signals', true) == false) {
-    personalizationEnabled = 'false'
-  }
   if (rnfbConfig.isFlagEnabled('google_analytics_automatic_screen_reporting_enabled', true) == false) {
     automaticScreenReportingEnabled = 'false'
+  }
+  if (rnfbConfig.isFlagEnabled('analytics_default_allow_analytics_storage', true) == false) {
+    analyticsStorageEnabled = 'false'
+  }
+  if (rnfbConfig.isFlagEnabled('analytics_default_allow_ad_storage', true) == false) {
+    adStorageEnabled = 'false'
+  }
+  if (rnfbConfig.isFlagEnabled('analytics_default_allow_ad_user_data', true) == false) {
+    adUserDataEnabled = 'false'
+  }
+  if (rnfbConfig.isFlagEnabled('analytics_default_allow_ad_personalization_signals', true) == false) {
+    personalizationEnabled = 'false'
   }
 }
 
 android {
+  def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+  if (agpVersion >= 7) {
+    namespace 'io.invertase.firebase.analytics'
+  }
+
   defaultConfig {
     multiDexEnabled true
     manifestPlaceholders = [
@@ -112,18 +129,31 @@ android {
       firebaseJsonCollectionDeactivated: collectionDeactivated,
       firebaseJsonAdidEnabled: adidEnabled,
       firebaseJsonSsaidEnabled: ssaidEnabled,
-      firebaseJsonPersonalizationEnabled: personalizationEnabled,
-      firebaseJsonAutomaticScreenReportingEnabled: automaticScreenReportingEnabled
+      firebaseJsonAutomaticScreenReportingEnabled: automaticScreenReportingEnabled,
+      firebaseJsonAnalyticsStorageEnabled: analyticsStorageEnabled,
+      firebaseJsonAdStorageEnabled: adStorageEnabled,
+      firebaseJsonAdUserDataEnabled: adUserDataEnabled,
+      firebaseJsonPersonalizationEnabled: personalizationEnabled
     ]
   }
+
+  buildFeatures {
+    // AGP 8 no longer builds config by default
+    buildConfig true
+  }
+
   lintOptions {
     disable 'GradleCompatible'
     abortOnError false
   }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+
+  if (agpVersion < 8) {
+    compileOptions {
+      sourceCompatibility JavaVersion.VERSION_11
+      targetCompatibility JavaVersion.VERSION_11
+    }
   }
+
   sourceSets {
     main {
       java.srcDirs = ['src/main/java', 'src/reactnative/java']

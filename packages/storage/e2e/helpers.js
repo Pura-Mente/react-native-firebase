@@ -1,4 +1,5 @@
 const testingUtils = require('@firebase/rules-unit-testing');
+const { getE2eTestProject, getE2eEmulatorHost } = require('../../app/e2e/helpers');
 
 // TODO make more unique?
 const ID = Date.now();
@@ -8,14 +9,15 @@ const PATH = `${PATH_ROOT}/${ID}`;
 const WRITE_ONLY_NAME = 'writeOnly.jpeg';
 
 exports.seed = async function seed(path) {
+  let leakDetectCurrent = global.RNFBDebugInTestLeakDetection;
+  global.RNFBDebugInTestLeakDetection = false;
   // Force the rules for the storage emulator to be what we expect
-
   await testingUtils.initializeTestEnvironment({
-    projectId: 'react-native-firebase-testing',
+    projectId: getE2eTestProject(),
     storage: {
       rules: `rules_version = '2';
       service firebase.storage {
-        match /b/{bucket}/o {
+        match /b/react-native-firebase-testing.appspot.com/o {
           match /{document=**} {
             allow read, write: if false;
           }
@@ -29,12 +31,18 @@ exports.seed = async function seed(path) {
             allow read, write: if true;
           }
 
-          match /react-native-firebase-testing/{document=**} {
+          match /${getE2eTestProject()}/{document=**} {
+            allow read, write: if true;
+          }
+        }
+        
+        match /b/react-native-firebase-testing/o {
+          match /only-second-bucket/{document=**} {
             allow read, write: if true;
           }
         }
       }`,
-      host: 'localhost',
+      host: getE2eEmulatorHost(),
       port: 9199,
     },
   });
@@ -53,7 +61,11 @@ exports.seed = async function seed(path) {
     await firebase.storage().ref(`${path}/list/file4.txt`).putString('File 4');
     await firebase.storage().ref(`${path}/list/nested/file5.txt`).putString('File 5');
   } catch (e) {
-    throw new Error('unable to seed storage service with test fixture: ' + e);
+    // eslint-disable-next-line no-console
+    console.error('unable to seed storage service with test fixtures');
+    throw e;
+  } finally {
+    global.RNFBDebugInTestLeakDetection = leakDetectCurrent;
   }
 };
 

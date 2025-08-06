@@ -49,6 +49,54 @@ import { ReactNativeFirebase } from '@react-native-firebase/app';
  */
 export namespace FirebaseFirestoreTypes {
   import FirebaseModule = ReactNativeFirebase.FirebaseModule;
+  /**
+   * An instance of Filter used to generate Firestore Filter queries.
+   */
+
+  export type QueryFilterType = 'OR' | 'AND';
+
+  export interface QueryFieldFilterConstraint {
+    fieldPath: keyof T | FieldPath;
+    operator: WhereFilterOp;
+    value: any;
+  }
+
+  export interface QueryCompositeFilterConstraint {
+    operator: QueryFilterType;
+    queries: QueryFieldFilterConstraint[];
+  }
+
+  export type QueryFilterConstraint = QueryFieldFilterConstraint | QueryCompositeFilterConstraint;
+
+  /**
+   * The Filter functions used to generate an instance of Filter.
+   */
+  export interface FilterFunction {
+    /**
+     * The Filter function used to generate an instance of Filter.
+     * e.g. Filter('name', '==', 'Ada')
+     */
+    (
+      fieldPath: keyof T | FieldPath,
+      operator: WhereFilterOp,
+      value: any,
+    ): QueryFieldFilterConstraint;
+    /**
+     * The Filter.or() static function used to generate a logical OR query using multiple Filter instances.
+     * e.g. Filter.or(Filter('name', '==', 'Ada'), Filter('name', '==', 'Bob'))
+     */
+    or(...queries: QueryFilterConstraint[]): QueryCompositeFilterConstraint;
+    /**
+     * The Filter.and() static function used to generate a logical AND query using multiple Filter instances.
+     * e.g. Filter.and(Filter('name', '==', 'Ada'), Filter('name', '==', 'Bob'))
+     */
+    and(...queries: QueryFilterConstraint[]): QueryCompositeFilterConstraint;
+  }
+  /**
+   * The Filter function used to generate an instance of Filter.
+   * e.g. Filter('name', '==', 'Ada')
+   */
+  export const Filter: FilterFunction;
 
   /**
    * An immutable object representing an array of bytes.
@@ -524,7 +572,7 @@ export namespace FirebaseFirestoreTypes {
      *
      * @param fieldPath The path (e.g. 'foo' or 'foo.bar') to a specific field.
      */
-    get<fieldType extends DocumentFieldType>(fieldPath: keyof T | FieldPath): fieldType;
+    get<fieldType extends DocumentFieldType>(fieldPath: keyof T | string | FieldPath): fieldType;
 
     /**
      * Returns true if this `DocumentSnapshot` is equal to the provided one.
@@ -841,10 +889,111 @@ export namespace FirebaseFirestoreTypes {
   }
 
   /**
+   * Represents an aggregation that can be performed by Firestore.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  export class AggregateField<T> {
+    /** A type string to uniquely identify instances of this class. */
+    type = 'AggregateField';
+  }
+
+  /**
+   * The union of all `AggregateField` types that are supported by Firestore.
+   */
+  export type AggregateFieldType = AggregateField<number>;
+
+  /**
+   * A type whose property values are all `AggregateField` objects.
+   */
+  export interface AggregateSpec {
+    [field: string]: AggregateFieldType;
+  }
+
+  /**
+   * A type whose keys are taken from an `AggregateSpec`, and whose values are the
+   * result of the aggregation performed by the corresponding `AggregateField`
+   * from the input `AggregateSpec`.
+   */
+  export type AggregateSpecData<T extends AggregateSpec> = {
+    [P in keyof T]: T[P] extends AggregateField<infer U> ? U : never;
+  };
+
+  /**
+   * The results of executing an aggregation query.
+   */
+  export interface AggregateQuerySnapshot<T extends AggregateSpec> {
+    /**
+     * The underlying query over which the aggregations recorded in this
+     * `AggregateQuerySnapshot` were performed.
+     */
+    get query(): Query<unknown>;
+
+    /**
+     * Returns the results of the aggregations performed over the underlying
+     * query.
+     *
+     * The keys of the returned object will be the same as those of the
+     * `AggregateSpec` object specified to the aggregation method, and the values
+     * will be the corresponding aggregation result.
+     *
+     * @returns The results of the aggregations performed over the underlying
+     * query.
+     */
+    data(): AggregateSpecData<T>;
+  }
+
+  /**
+   * The results of requesting an aggregated query.
+   */
+  export interface AggregateQuery<T extends AggregateSpec> {
+    /**
+     * The underlying query for this instance.
+     */
+    get query(): Query<unknown>;
+
+    /**
+     * Executes the query and returns the results as a AggregateQuerySnapshot.
+     *
+     *
+     * #### Example
+     *
+     * ```js
+     * const querySnapshot = await firebase.firestore()
+     *   .collection('users')
+     *   .count()
+     *   .get();
+     * ```
+     *
+     * @param options An object to configure the get behavior.
+     */
+    get(): Promise<AggregateQuerySnapshot<T>>;
+  }
+
+  /**
    * A Query refers to a `Query` which you can read or listen to. You can also construct refined `Query` objects by
    * adding filters and ordering.
    */
   export interface Query<T extends DocumentData = DocumentData> {
+    /**
+     * Calculates the number of documents in the result set of the given query, without actually downloading
+     * the documents.
+     *
+     * Using this function to count the documents is efficient because only the final count, not the
+     * documents' data, is downloaded. This function can even count the documents if the result set
+     * would be prohibitively large to download entirely (e.g. thousands of documents).
+     *
+     * The result received from the server is presented, unaltered, without considering any local state.
+     * That is, documents in the local cache are not taken into consideration, neither are local
+     * modifications not yet synchronized with the server. Previously-downloaded results, if any,
+     *  are not used: every request using this source necessarily involves a round trip to the server.
+     */
+    count(): AggregateQuery<{ count: AggregateField<number> }>;
+
+    /**
+     * Same as count()
+     */
+    countFromServer(): AggregateQuery<{ count: AggregateField<number> }>;
+
     /**
      * Creates and returns a new Query that ends at the provided document (inclusive). The end
      * position is relative to the order of the query. The document must contain all of the
@@ -1146,7 +1295,7 @@ export namespace FirebaseFirestoreTypes {
      * @param fieldPath The field to sort by. Either a string or FieldPath instance.
      * @param directionStr Optional direction to sort by (`asc` or `desc`). If not specified, order will be ascending.
      */
-    orderBy(fieldPath: keyof T | FieldPath, directionStr?: 'asc' | 'desc'): Query<T>;
+    orderBy(fieldPath: keyof T | string | FieldPath, directionStr?: 'asc' | 'desc'): Query<T>;
 
     /**
      * Creates and returns a new Query that starts after the provided document (exclusive). The start
@@ -1253,6 +1402,24 @@ export namespace FirebaseFirestoreTypes {
      * @param value The comparison value.
      */
     where(fieldPath: keyof T | FieldPath, opStr: WhereFilterOp, value: any): Query<T>;
+
+    /**
+     * Creates and returns a new Query with the additional filter that documents must contain the specified field and
+     * the value should satisfy the relation constraint provided.
+     *
+     * #### Example
+     *
+     * ```js
+     * // Get all users who's age is 30 or above
+     * const querySnapshot = await firebase.firestore()
+     *   .collection('users')
+     *   .where(Filter('age', '>=', 30));
+     *   .get();
+     * ```
+     *
+     * @param filter The filter to apply to the query.
+     */
+    where(filter: QueryFilterConstraint): Query<T>;
   }
 
   /**
@@ -1839,6 +2006,29 @@ export namespace FirebaseFirestoreTypes {
   }
 
   /**
+   * Returns the PersistentCache Index Manager used by the given Firestore object.
+   * The PersistentCacheIndexManager instance, or null if local persistent storage is not in use.
+   */
+  export interface PersistentCacheIndexManager {
+    /**
+     * Enables the SDK to create persistent cache indexes automatically for local query
+     * execution when the SDK believes cache indexes can help improves performance.
+     * This feature is disabled by default.
+     */
+    enableIndexAutoCreation(): Promise<void>;
+    /**
+     * Stops creating persistent cache indexes automatically for local query execution.
+     * The indexes which have been created by calling `enableIndexAutoCreation()` still take effect.
+     */
+    disableIndexAutoCreation(): Promise<void>;
+    /**
+     * Removes all persistent cache indexes. Note this function also deletes indexes
+     * generated by `setIndexConfiguration()`, which is deprecated.
+     */
+    deleteAllIndexes(): Promise<void>;
+  }
+
+  /**
    * Represents the state of bundle loading tasks.
    *
    * Both 'Error' and 'Success' are sinking state: task will abort or complete and there will be no more
@@ -1904,6 +2094,11 @@ export namespace FirebaseFirestoreTypes {
      * Returns the `Timestamp` class.
      */
     Timestamp: typeof Timestamp;
+
+    /**
+     * Returns the `Filter` function.
+     */
+    Filter: typeof Filter;
 
     /**
      * Used to set the cache size to unlimited when passing to `cacheSizeBytes` in
@@ -2149,6 +2344,14 @@ export namespace FirebaseFirestoreTypes {
      * @param port: emulator port (eg, 8080)
      */
     useEmulator(host: string, port: number): void;
+
+    /**
+     * Gets the `PersistentCacheIndexManager` instance used by this Cloud Firestore instance.
+     * This is not the same as Cloud Firestore Indexes.
+     * Persistent cache indexes are optional indexes that only exist within the SDK to assist in local query execution.
+     * Returns `null` if local persistent storage is not in use.
+     */
+    persistentCacheIndexManager(): PersistentCacheIndexManager | null;
   }
 
   /**
@@ -2157,10 +2360,10 @@ export namespace FirebaseFirestoreTypes {
   export type SetValue<T> = T extends Timestamp
     ? Timestamp | Date // allow Date in place of Timestamp
     : T extends object
-    ? {
-        [P in keyof T]: SetValue<T[P]> | FieldValue; // allow FieldValue in place of values
-      }
-    : T;
+      ? {
+          [P in keyof T]: SetValue<T[P]> | FieldValue; // allow FieldValue in place of values
+        }
+      : T;
 }
 
 declare const defaultExport: ReactNativeFirebase.FirebaseModuleWithStaticsAndApp<
@@ -2174,6 +2377,10 @@ export const firebase: ReactNativeFirebase.Module & {
     name?: string,
   ): ReactNativeFirebase.FirebaseApp & { firestore(): FirebaseFirestoreTypes.Module };
 };
+
+export * from './modular';
+
+export const Filter: FirebaseFirestoreTypes.FilterFunction;
 
 export default defaultExport;
 
@@ -2191,7 +2398,7 @@ declare module '@react-native-firebase/app' {
       >;
     }
     interface FirebaseApp {
-      firestore(): FirebaseFirestoreTypes.Module;
+      firestore(databaseId?: string): FirebaseFirestoreTypes.Module;
     }
   }
 }

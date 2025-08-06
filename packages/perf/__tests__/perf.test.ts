@@ -1,4 +1,14 @@
-import perf, { firebase } from '../lib';
+import { describe, expect, it } from '@jest/globals';
+
+import perf, {
+  firebase,
+  getPerformance,
+  initializePerformance,
+  trace,
+  httpMetric,
+  newScreenTrace,
+  startScreenTrace,
+} from '../lib';
 
 describe('Performance Monitoring', function () {
   describe('namespace', function () {
@@ -11,10 +21,10 @@ describe('Performance Monitoring', function () {
 
   describe('setPerformanceCollectionEnabled', function () {
     it('errors if not boolean', function () {
-      expect(() => {
+      expect(async () => {
         // @ts-ignore
-        perf().setPerformanceCollectionEnabled();
-      }).toThrow('must be a boolean');
+        await perf().setPerformanceCollectionEnabled();
+      }).rejects.toThrow('must be a boolean');
     });
   });
 
@@ -107,7 +117,7 @@ describe('Performance Monitoring', function () {
     it('errors if not boolean', async function () {
       try {
         // @ts-ignore
-        firebase.perf().setPerformanceCollectionEnabled();
+        await firebase.perf().setPerformanceCollectionEnabled();
         return Promise.reject(new Error('Did not throw'));
       } catch (e: any) {
         expect(e.message).toEqual(
@@ -115,6 +125,32 @@ describe('Performance Monitoring', function () {
         );
         return Promise.resolve();
       }
+    });
+  });
+
+  describe('modular', function () {
+    it('`getPerformance` function is properly exposed to end user', function () {
+      expect(getPerformance).toBeDefined();
+    });
+
+    it('`initializePerformance` function is properly exposed to end user', function () {
+      expect(initializePerformance).toBeDefined();
+    });
+
+    it('`trace` function is properly exposed to end user', function () {
+      expect(trace).toBeDefined();
+    });
+
+    it('`httpMetric` function is properly exposed to end user', function () {
+      expect(httpMetric).toBeDefined();
+    });
+
+    it('`newScreenTrace` function is properly exposed to end user', function () {
+      expect(newScreenTrace).toBeDefined();
+    });
+
+    it('`startScreenTrace` function is properly exposed to end user', function () {
+      expect(startScreenTrace).toBeDefined();
     });
   });
 });

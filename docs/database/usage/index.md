@@ -50,7 +50,7 @@ import database from '@react-native-firebase/database';
 const reference = database().ref('/users/123');
 ```
 
-NOTE: To get a reference to a database other than an 'us-central1' default database, you must pass the database URL. You can find your Realtime Database URL in the Realtime Database section of the Firebase console.
+NOTE: To get a reference to a database other than a 'us-central1' default database, you must pass the database URL. You can find your Realtime Database URL in the Realtime Database section of the Firebase console.
 
 ```js
 import { firebase } from '@react-native-firebase/database';
@@ -341,7 +341,7 @@ For example:
 import database, { firebase } from '@react-native-firebase/database';
 
 // create a secondary app
-const secondaryApp = await firebase.initalizeApp(credentials, config);
+const secondaryApp = await firebase.initializeApp(credentials, config);
 
 // pass the secondary app instance to the database module
 const secondaryDatabase = database(secondaryApp);

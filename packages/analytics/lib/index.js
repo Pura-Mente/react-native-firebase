@@ -17,6 +17,7 @@
 
 import {
   isAlphaNumericUnderscore,
+  isE164PhoneNumber,
   isIOS,
   isNull,
   isNumber,
@@ -32,8 +33,10 @@ import {
   FirebaseModule,
   getFirebaseRoot,
 } from '@react-native-firebase/app/lib/internal';
+import { setReactNativeModule } from '@react-native-firebase/app/lib/internal/nativeModule';
 import { isBoolean } from '@react-native-firebase/app/lib/common';
 
+import fallBackModule from './web/RNFBAnalyticsModule';
 import version from './version';
 import * as structs from './structs';
 
@@ -79,7 +82,7 @@ const namespace = 'analytics';
 const nativeModuleName = 'RNFBAnalyticsModule';
 
 class FirebaseAnalyticsModule extends FirebaseModule {
-  logEvent(name, params = {}) {
+  logEvent(name, params = {}, options = {}) {
     if (!isString(name)) {
       throw new Error("firebase.analytics().logEvent(*) 'name' expected a string value.");
     }
@@ -100,6 +103,18 @@ class FirebaseAnalyticsModule extends FirebaseModule {
       throw new Error(
         `firebase.analytics().logEvent(*) 'name' invalid event name '${name}'. Names should contain 1 to 40 alphanumeric characters or underscores.`,
       );
+    }
+
+    if (!isUndefined(options)) {
+      if (!isObject(options)) {
+        throw new Error(
+          "firebase.analytics().logEvent(_, _, *) 'options' expected an object value.",
+        );
+      }
+
+      if (!isUndefined(options.global) && !isBoolean(options.global)) {
+        throw new Error("'options.global' property expected a boolean.");
+      }
     }
 
     return this.native.logEvent(name, params);
@@ -135,6 +150,10 @@ class FirebaseAnalyticsModule extends FirebaseModule {
     return this.native.getAppInstanceId();
   }
 
+  getSessionId() {
+    return this.native.getSessionId();
+  }
+
   setUserId(id) {
     if (!isNull(id) && !isString(id)) {
       throw new Error("firebase.analytics().setUserId(*) 'id' expected a string value.");
@@ -157,11 +176,23 @@ class FirebaseAnalyticsModule extends FirebaseModule {
     return this.native.setUserProperty(name, value);
   }
 
-  setUserProperties(properties) {
+  setUserProperties(properties, options = {}) {
     if (!isObject(properties)) {
       throw new Error(
         "firebase.analytics().setUserProperties(*) 'properties' expected an object of key/value pairs.",
       );
+    }
+
+    if (!isUndefined(options)) {
+      if (!isObject(options)) {
+        throw new Error(
+          "firebase.analytics().logEvent(_, _, *) 'options' expected an object value.",
+        );
+      }
+
+      if (!isUndefined(options.global) && !isBoolean(options.global)) {
+        throw new Error("'options.global' property expected a boolean.");
+      }
     }
 
     const entries = Object.entries(properties);
@@ -179,6 +210,26 @@ class FirebaseAnalyticsModule extends FirebaseModule {
 
   resetAnalyticsData() {
     return this.native.resetAnalyticsData();
+  }
+
+  setConsent(consentSettings) {
+    if (!isObject(consentSettings)) {
+      throw new Error(
+        'firebase.analytics().setConsent(*): The supplied arg must be an object of key/values.',
+      );
+    }
+
+    const entries = Object.entries(consentSettings);
+    for (let i = 0; i < entries.length; i++) {
+      const [key, value] = entries[i];
+      if (!isBoolean(value)) {
+        throw new Error(
+          `firebase.analytics().setConsent(*) 'consentSettings' value for parameter '${key}' is invalid, expected a boolean.`,
+        );
+      }
+    }
+
+    return this.native.setConsent(consentSettings);
   }
 
   /** -------------------
@@ -691,6 +742,58 @@ class FirebaseAnalyticsModule extends FirebaseModule {
 
     return this.native.initiateOnDeviceConversionMeasurementWithEmailAddress(emailAddress);
   }
+
+  initiateOnDeviceConversionMeasurementWithHashedEmailAddress(hashedEmailAddress) {
+    if (!isString(hashedEmailAddress)) {
+      throw new Error(
+        "firebase.analytics().initiateOnDeviceConversionMeasurementWithHashedEmailAddress(*) 'hashedEmailAddress' expected a string value.",
+      );
+    }
+
+    if (!isIOS) {
+      return;
+    }
+
+    return this.native.initiateOnDeviceConversionMeasurementWithHashedEmailAddress(
+      hashedEmailAddress,
+    );
+  }
+
+  initiateOnDeviceConversionMeasurementWithPhoneNumber(phoneNumber) {
+    if (!isE164PhoneNumber(phoneNumber)) {
+      throw new Error(
+        "firebase.analytics().initiateOnDeviceConversionMeasurementWithPhoneNumber(*) 'phoneNumber' expected a string value in E.164 format.",
+      );
+    }
+
+    if (!isIOS) {
+      return;
+    }
+
+    return this.native.initiateOnDeviceConversionMeasurementWithPhoneNumber(phoneNumber);
+  }
+
+  initiateOnDeviceConversionMeasurementWithHashedPhoneNumber(hashedPhoneNumber) {
+    if (isE164PhoneNumber(hashedPhoneNumber)) {
+      throw new Error(
+        "firebase.analytics().initiateOnDeviceConversionMeasurementWithHashedPhoneNumber(*) 'hashedPhoneNumber' expected a sha256-hashed value of a phone number in E.164 format.",
+      );
+    }
+
+    if (!isString(hashedPhoneNumber)) {
+      throw new Error(
+        "firebase.analytics().initiateOnDeviceConversionMeasurementWithHashedPhoneNumber(*) 'hashedPhoneNumber' expected a string value.",
+      );
+    }
+
+    if (!isIOS) {
+      return;
+    }
+
+    return this.native.initiateOnDeviceConversionMeasurementWithHashedPhoneNumber(
+      hashedPhoneNumber,
+    );
+  }
 }
 
 // import { SDK_VERSION } from '@react-native-firebase/analytics';
@@ -709,7 +812,12 @@ export default createModuleNamespace({
   ModuleClass: FirebaseAnalyticsModule,
 });
 
+export * from './modular/index';
+
 // import analytics, { firebase } from '@react-native-firebase/analytics';
 // analytics().logEvent(...);
 // firebase.analytics().logEvent(...);
 export const firebase = getFirebaseRoot();
+
+// Register the interop module for non-native platforms.
+setReactNativeModule(nativeModuleName, fallBackModule);

@@ -11,7 +11,7 @@ buildscript {
     }
 
     dependencies {
-      classpath('com.android.tools.build:gradle:7.0.4')
+      classpath("com.android.tools.build:gradle:8.4.0")
     }
   }
 }
@@ -60,19 +60,32 @@ project.ext {
 }
 
 android {
+  def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+  if (agpVersion >= 7) {
+    namespace 'io.invertase.firebase.appcheck'
+  }
+
   defaultConfig {
     multiDexEnabled true
     // Here we add a build config field to allow devs to provide a
     // FIREBASE_APP_CHECK_DEBUG_TOKEN to be used in debug mode.
     buildConfigField "String", "FIREBASE_APP_CHECK_DEBUG_TOKEN", "\"${System.env.FIREBASE_APP_CHECK_DEBUG_TOKEN}\""
   }
+
+  buildFeatures {
+    // AGP 8 no longer builds config by default
+    buildConfig true
+  }
+
   lintOptions {
     disable 'GradleCompatible'
     abortOnError false
   }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+  if (agpVersion < 8) {
+    compileOptions {
+      sourceCompatibility JavaVersion.VERSION_11
+      targetCompatibility JavaVersion.VERSION_11
+    }
   }
   sourceSets {
     main {
@@ -89,7 +102,7 @@ repositories {
 dependencies {
   api appProject
   implementation platform("com.google.firebase:firebase-bom:${ReactNative.ext.getVersion('firebase', 'bom')}")
-  implementation "com.google.firebase:firebase-appcheck-safetynet"
+  implementation 'com.google.firebase:firebase-appcheck-playintegrity'
   implementation "com.google.firebase:firebase-appcheck-debug"
 }
 

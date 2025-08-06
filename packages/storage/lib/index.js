@@ -16,6 +16,7 @@
  */
 
 import { isAndroid, isNumber, isString } from '@react-native-firebase/app/lib/common';
+import { setReactNativeModule } from '@react-native-firebase/app/lib/internal/nativeModule';
 import {
   createModuleNamespace,
   FirebaseModule,
@@ -25,6 +26,7 @@ import StorageReference from './StorageReference';
 import StorageStatics from './StorageStatics';
 import { getGsUrlParts, getHttpUrlParts, handleStorageEvent } from './utils';
 import version from './version';
+import fallBackModule from './web/RNFBStorageModule';
 
 const namespace = 'storage';
 const nativeEvents = ['storage_event'];
@@ -159,8 +161,13 @@ class FirebaseStorageModule extends FirebaseModule {
     if (!host || !isString(host) || !port || !isNumber(port)) {
       throw new Error('firebase.storage().useEmulator() takes a non-empty host and port');
     }
+
     let _host = host;
-    if (isAndroid && _host) {
+
+    const androidBypassEmulatorUrlRemap =
+      typeof this.firebaseJson.android_bypass_emulator_url_remap === 'boolean' &&
+      this.firebaseJson.android_bypass_emulator_url_remap;
+    if (!androidBypassEmulatorUrlRemap && isAndroid && _host) {
       if (_host === 'localhost' || _host === '127.0.0.1') {
         _host = '10.0.2.2';
         // eslint-disable-next-line no-console
@@ -171,7 +178,7 @@ class FirebaseStorageModule extends FirebaseModule {
     }
     this.emulatorHost = host;
     this.emulatorPort = port;
-    this.native.useEmulator(_host, port);
+    this.native.useEmulator(_host, port, this._customUrlOrRegion);
     return [_host, port]; // undocumented return, just used to unit test android host remapping
   }
 }
@@ -200,3 +207,7 @@ export default createModuleNamespace({
 // storage().X(...);
 // firebase.storage().X(...);
 export const firebase = getFirebaseRoot();
+
+export * from './modular';
+
+setReactNativeModule(nativeModuleName, fallBackModule);

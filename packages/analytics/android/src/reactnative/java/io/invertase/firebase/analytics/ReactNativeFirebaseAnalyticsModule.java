@@ -94,6 +94,21 @@ public class ReactNativeFirebaseAnalyticsModule extends ReactNativeFirebaseModul
   }
 
   @ReactMethod
+  public void getSessionId(Promise promise) {
+    module
+        .getSessionId()
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                Long result = task.getResult();
+                promise.resolve(result != null ? result.doubleValue() : null);
+              } else {
+                rejectPromiseWithExceptionMap(promise, task.getException());
+              }
+            });
+  }
+
+  @ReactMethod
   public void setUserId(String id, Promise promise) {
     module
         .setUserId(id)
@@ -153,6 +168,20 @@ public class ReactNativeFirebaseAnalyticsModule extends ReactNativeFirebaseModul
   public void setDefaultEventParameters(@Nullable ReadableMap params, Promise promise) {
     module
         .setDefaultEventParameters(toBundle(params))
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                promise.resolve(task.getResult());
+              } else {
+                rejectPromiseWithExceptionMap(promise, task.getException());
+              }
+            });
+  }
+
+  @ReactMethod
+  public void setConsent(ReadableMap consentSettings, Promise promise) {
+    module
+        .setConsent(Arguments.toBundle(consentSettings))
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {

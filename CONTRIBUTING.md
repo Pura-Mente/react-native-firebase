@@ -76,7 +76,7 @@ Working on your first Pull Request? You can learn how from this _free_ series, [
      *
      * @platform ios iOS
      */
-    aCoolMethod(): Promize<null>;
+    aCoolMethod(): Promise<null>;
   }
   ```
   - If a method works on both platforms then there's no need to annotate it
@@ -100,9 +100,10 @@ cd react-native-firebase
 
 ```bash
 yarn
+yarn lerna:prepare
 yarn tests:ios:pod:install
 brew tap wix/brew
-brew install applesimutils xbeautify
+brew install applesimutils xcbeautify
 ```
 
 > Note that this project is a mono-repo, so you only need to install NPM dependencies once at the root of the project with `yarn`.
@@ -124,9 +125,12 @@ The project has a Detox powered end-to-end testing app located in `/tests`.
 To run end-to-end tests for `Android`, please run:
 
 - `yarn tests:android:build` - builds `Android` test application.
+  - Note: for Windows you will need `yarn tests:android:build:windows`
 - `yarn tests:packager:jet-reset-cache` - runs JavaScript bundler.
 - `yarn tests:emulator:start` - runs Firestore emulator for Firestore tests.
+  - Note: for Windows you will need `yarn tests:emulator:start:windows`
 - `yarn tests:android:test` - runs tests using Detox library. Tests for each package can be found in the `e2e` directory (i.e. `[PACKAGE]/e2e/*.e2e.js`)
+  - Note: for Windows you will need `yarn tests:android:test:windows`
 
 To run end-to-end tests for `iOS`, please run:
 
@@ -135,7 +139,7 @@ To run end-to-end tests for `iOS`, please run:
 - `yarn tests:emulator:start` - runs Firestore emulator for Firestore tests.
 - `yarn tests:ios:test` - runs tests using Detox library. Tests for each package can be found in the `e2e` directory (i.e. `[PACKAGE]/e2e/*.e2e.js`)
 
-See it's local testing guide [here](https://github.com/invertase/react-native-firebase/blob/main/tests/README.md) to get started
+See its local testing guide [here](https://github.com/invertase/react-native-firebase/blob/main/tests/README.md) to get started
 with `e2e` testing this project.
 
 ---

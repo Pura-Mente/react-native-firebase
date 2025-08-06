@@ -69,6 +69,107 @@ export namespace FirebaseAppCheckTypes {
   }
 
   /**
+   * Custom provider class.
+   * @public
+   */
+  export class CustomProvider implements AppCheckProvider {
+    constructor(customProviderOptions: CustomProviderOptions);
+  }
+
+  export interface CustomProviderOptions {
+    /**
+     * Function to get an App Check token through a custom provider
+     * service.
+     */
+    getToken: () => Promise<AppCheckToken>;
+  }
+  /**
+   * Options for App Check initialization.
+   */
+  export interface AppCheckOptions {
+    /**
+     * The App Check provider to use. This can be either the built-in reCAPTCHA provider
+     * or a custom provider.
+     */
+    provider: CustomProvider;
+
+    /**
+     * If true, enables SDK to automatically
+     * refresh AppCheck token as needed. If undefined, the value will default
+     * to the value of `app.automaticDataCollectionEnabled`. That property
+     * defaults to false and can be set in the app config.
+     */
+    isTokenAutoRefreshEnabled?: boolean;
+  }
+
+  export type NextFn<T> = (value: T) => void;
+  export type ErrorFn = (error: Error) => void;
+  export type CompleteFn = () => void;
+
+  export interface Observer<T> {
+    next: NextFn<T>;
+    error: ErrorFn;
+    complete: CompleteFn;
+  }
+
+  export type PartialObserver<T> = Partial<Observer<T>>;
+
+  export interface ReactNativeFirebaseAppCheckProviderOptions {
+    /**
+     * debug token to use, if any. Defaults to undefined, pre-configure tokens in firebase web console if needed
+     */
+    debugToken?: string;
+  }
+
+  export interface ReactNativeFirebaseAppCheckProviderWebOptions
+    extends ReactNativeFirebaseAppCheckProviderOptions {
+    /**
+     * The web provider to use, either `reCaptchaV3` or `reCaptchaEnterprise`, defaults to `reCaptchaV3`
+     */
+    provider?: 'debug' | 'reCaptchaV3' | 'reCaptchaEnterprise';
+
+    /**
+     * siteKey for use in web queries, defaults to `none`
+     */
+    siteKey?: string;
+  }
+
+  export interface ReactNativeFirebaseAppCheckProviderAppleOptions
+    extends ReactNativeFirebaseAppCheckProviderOptions {
+    /**
+     * The apple provider to use, either `deviceCheck` or `appAttest`, or `appAttestWithDeviceCheckFallback`,
+     * defaults to `DeviceCheck`. `appAttest` requires iOS 14+ or will fail, `appAttestWithDeviceCheckFallback`
+     * will use `appAttest` for iOS14+ and fallback to `deviceCheck` on devices with ios13 and lower
+     */
+    provider?: 'debug' | 'deviceCheck' | 'appAttest' | 'appAttestWithDeviceCheckFallback';
+  }
+
+  export interface ReactNativeFirebaseAppCheckProviderAndroidOptions
+    extends ReactNativeFirebaseAppCheckProviderOptions {
+    /**
+     * The android provider to use, either `debug` or `playIntegrity`. default is `playIntegrity`.
+     */
+    provider?: 'debug' | 'playIntegrity';
+  }
+
+  export interface ReactNativeFirebaseAppCheckProvider extends AppCheckProvider {
+    /**
+     * Specify how the app check provider should be configured. The new configuration is
+     * in effect when this call returns. You must call `getToken()`
+     * after this call to get a token using the new configuration.
+     * This custom provider allows for delayed configuration and re-configuration on all platforms
+     * so AppCheck has the same experience across all platforms, with the only difference being the native
+     * providers you choose to use on each platform.
+     */
+    configure(options: {
+      web?: ReactNativeFirebaseAppCheckProviderWebOptions;
+      android?: ReactNativeFirebaseAppCheckProviderAndroidOptions;
+      apple?: ReactNativeFirebaseAppCheckProviderAppleOptions;
+      isTokenAutoRefreshEnabled?: boolean;
+    }): void;
+  }
+
+  /**
    * Result returned by `getToken()`.
    */
   interface AppCheckTokenResult {
@@ -90,10 +191,15 @@ export namespace FirebaseAppCheckTypes {
      */
     readonly expireTimeMillis: number;
   }
+  /**
+   * The result return from `onTokenChanged`
+   */
+  export type AppCheckListenerResult = AppCheckToken & { readonly appName: string };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   export interface Statics {
     // firebase.appCheck.* static props go here
+    CustomProvider: typeof CustomProvider;
   }
 
   /**
@@ -119,16 +225,33 @@ export namespace FirebaseAppCheckTypes {
    */
   export class Module extends FirebaseModule {
     /**
+     * Create a ReactNativeFirebaseAppCheckProvider option for use in react-native-firebase
+     */
+    newReactNativeFirebaseAppCheckProvider(): ReactNativeFirebaseAppCheckProvider;
+
+    /**
+     * Initialize the AppCheck module. Note that in react-native-firebase AppCheckOptions must always
+     * be an object with a `provider` member containing `ReactNativeFirebaseAppCheckProvider` that has returned successfully
+     * from a call to the `configure` method, with sub-providers for the various platforms configured to meet your project
+     * requirements. This must be called prior to interacting with any firebase services protected by AppCheck
+     *
+     * @param options an AppCheckOptions with a configured ReactNativeFirebaseAppCheckProvider as the provider
+     */
+    // TODO wrong types
+    initializeAppCheck(options: AppCheckOptions): Promise<void>;
+
+    /**
      * Activate App Check
      * On iOS App Check is activated with DeviceCheck provider simply by including the module, using the token auto refresh default or
      * the specific value (if configured) in firebase.json, but calling this does no harm.
-     * On Android you must call this and it will install the SafetyNet provider in release builds, the Debug provider if debuggable.
+     * On Android if you call this it will install the PlayIntegrity provider in release builds, the Debug provider if debuggable.
      * On both platforms you may use this method to alter the token refresh setting after startup.
      * On iOS if you want to set a specific AppCheckProviderFactory (for instance to FIRAppCheckDebugProviderFactory or
      * FIRAppAttestProvider) you must manually do that in your AppDelegate.m prior to calling [FIRApp configure]
      *
+     * @deprecated use initializeAppCheck to gain access to all platform providers and firebase-js-sdk v9 compatibility
      * @param siteKeyOrProvider - This is ignored, Android uses DebugProviderFactory if the app is debuggable (https://firebase.google.com/docs/app-check/android/debug-provider)
-     *                            Android uses SafetyNetProviderFactory for release builds.
+     *                            Android uses PlayIntegrityProviderFactory for release builds.
      *                            iOS uses DeviceCheckProviderFactory by default unless altered in AppDelegate.m manually
      * @param isTokenAutoRefreshEnabled - If true, enables SDK to automatically
      * refresh AppCheck token as needed. If undefined, the value will default
@@ -160,6 +283,14 @@ export namespace FirebaseAppCheckTypes {
     getToken(forceRefresh?: boolean): Promise<AppCheckTokenResult>;
 
     /**
+     * Requests a Firebase App Check token. This method should be used only if you need to authorize requests
+     * to a non-Firebase backend. Returns limited-use tokens that are intended for use with your non-Firebase
+     * backend endpoints that are protected with Replay Protection (https://firebase.google.com/docs/app-check/custom-resource-backend#replay-protection).
+     * This method does not affect the token generation behavior of the getAppCheckToken() method.
+     */
+    getLimitedUseToken(): Promise<AppCheckTokenResult>;
+
+    /**
      * Registers a listener to changes in the token state. There can be more
      * than one listener registered at the same time for one or more
      * App Check instances. The listeners call back on the UI thread whenever
@@ -167,12 +298,10 @@ export namespace FirebaseAppCheckTypes {
      *
      * @returns A function that unsubscribes this listener.
      */
-    // TODO there is a great deal of Observer / PartialObserver typing to carry-in
-    // onTokenChanged(observer: PartialObserver<AppCheckTokenResult>): () => void;
+    // TODO wrong types
+    onTokenChanged(observer: PartialObserver<AppCheckListenerResult>): () => void;
 
     /**
-     * TODO implement token listener for android.
-     *
      * Registers a listener to changes in the token state. There can be more
      * than one listener registered at the same time for one or more
      * App Check instances. The listeners call back on the UI thread whenever
@@ -181,13 +310,20 @@ export namespace FirebaseAppCheckTypes {
      * Token listeners do not exist in the native SDK for iOS, no token change events will be emitted on that platform.
      * This is not yet implemented on Android, no token change events will be emitted until implemented.
      *
+     * NOTE: Although an `onError` callback can be provided, it will
+     * never be called, Android sdk code doesn't provide handling for onError function
+     *
+     * NOTE: Although an `onCompletion` callback can be provided, it will
+     * never be called because the token stream is never-ending.
+     *
      * @returns A function that unsubscribes this listener.
      */
-    // onTokenChanged(
-    //   onNext: (tokenResult: AppCheckTokenResult) => void,
-    //   onError?: (error: Error) => void,
-    //   onCompletion?: () => void,
-    // ): () => void;
+    // TODO wrong types
+    onTokenChanged(
+      onNext: (tokenResult: AppCheckListenerResult) => void,
+      onError?: (error: Error) => void,
+      onCompletion?: () => void,
+    ): () => void;
   }
 }
 
@@ -204,6 +340,8 @@ export const firebase: ReactNativeFirebase.Module & {
 };
 
 export default defaultExport;
+
+export * from './modular';
 
 /**
  * Attach namespace to `firebase.` and `FirebaseApp.`.
